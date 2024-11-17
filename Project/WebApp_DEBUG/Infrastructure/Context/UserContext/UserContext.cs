@@ -1,7 +1,8 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using WebApp_DEBUG.Domain.Model.UserModel;
 
-namespace WebApp_DEBUG.Domain.Model.UserModel
+namespace WebApp_DEBUG.Infrastructure.Context.UserContext
 {
     class UserContext : DbContext
     {

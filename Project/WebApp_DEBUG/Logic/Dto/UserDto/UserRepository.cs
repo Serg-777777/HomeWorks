@@ -1,30 +1,32 @@
 ﻿
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using WebApp_DEBUG.Domain.Dto.Mapper.UserDtoMapper;
 using WebApp_DEBUG.Domain.Model.UserModel;
-namespace WebApp_DEBUG.Domain.Dto.UserDto;
+using WebApp_DEBUG.Infrastructure.Context.UserContext;
+using WebApp_DEBUG.Logic.Dto;
+using WebApp_DEBUG.Logic.Dto.Mapper.UserMap;
+namespace WebApp_DEBUG.Logic.Dto.UserDto;
 
 
 
- partial class UserRepository : IDtoRepository<User, UserModelDto>
-	{
-		List<User> _users; // тест
-        UserContext? _context=null;
-        IMapper _mapper;
+partial class UserRepository : IDtoRepository<User, UserModelDto>
+{
+    List<User> _users; // тест
+    UserContext? _context = null;
+    IMapper _mapper;
     ILogger<UserRepository> _log;
 
     public UserRepository(UserContext context, IMapper mapper, ILogger<UserRepository> log)
-	{
-		_context = context ?? throw new ArgumentNullException(nameof(context));
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _log = log;
         // тест
         _users = new();
-		var role = new UserRole() { RoleName = "admin" };
-		var user = new User() {Id=0, Login = "Woman", UserRole = role };
-		_users.Add(user);
-        user = new User() {Id=1, Login = "Man", UserRole = role };
+        var role = new UserRole() { RoleName = "admin" };
+        var user = new User() { Id = 0, Login = "Woman", UserRole = role };
+        _users.Add(user);
+        user = new User() { Id = 1, Login = "Man", UserRole = role };
         _users.Add(user);
     }
 
@@ -34,10 +36,10 @@ namespace WebApp_DEBUG.Domain.Dto.UserDto;
         //!!! Ошибка - Object reference not set to an instance of an object
 
         _log.LogWarning($"$$$ Count: {_context?.Users.Count()}");
-         var us = _context?.Users.ToList();
-            return us;
+        var us = _context?.Users.ToList();
+        return us;
 
-       // return _users.ToList();//тестинг
+        // return _users.ToList();//тестинг
     }
 
     public virtual void DeleteEntity(int id)
@@ -47,8 +49,8 @@ namespace WebApp_DEBUG.Domain.Dto.UserDto;
 
     public virtual void Dispose()
     {
-      //  if (_context != null)
-          //  _context.Dispose();
+        //  if (_context != null)
+        //  _context.Dispose();
     }
 
     public virtual UserModelDto GetEntity(int id)

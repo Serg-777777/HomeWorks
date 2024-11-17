@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApp_DEBUG.Logic.Controllers.Home
+namespace WebApp_DEBUG.Infrastructure.Controllers.Home
 {
     public class HomeController : Controller
     {

@@ -1,18 +1,18 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using WebApp_DEBUG.Domain.Dto.Mapper.UserDtoMapper;
-using  WebApp_DEBUG.Domain.Dto;
 using WebApp_DEBUG.Domain.Model.UserModel;
+using WebApp_DEBUG.Logic.Dto;
+using WebApp_DEBUG.Logic.Dto.Mapper.UserMap;
 
 
-namespace WebApp_DEBUG.Logic.Controllers.User;
+namespace WebApp_DEBUG.Infrastructure.Controllers.User;
 
 public class UserController : Controller
 {
-    IDtoRepository<WebApp_DEBUG.Domain.Model.UserModel.User, UserModelDto> _usersRepos;
+    IDtoRepository<Domain.Model.UserModel.User, UserModelDto> _usersRepos;
 
     ILogger<UserController> _logger;
-    public UserController(IDtoRepository<WebApp_DEBUG.Domain.Model.UserModel.User, UserModelDto> usersRepos, ILogger<UserController> logger)
+    public UserController(IDtoRepository<Domain.Model.UserModel.User, UserModelDto> usersRepos, ILogger<UserController> logger)
     {
         _usersRepos = usersRepos;
         _logger = logger;
@@ -35,7 +35,7 @@ public class UserController : Controller
     public ActionResult List()
     {
         _logger.LogWarning($"+++ LIST TEST");
-       //!!! Ошибка - Object reference not set to an instance of an object
+        //!!! Ошибка - Object reference not set to an instance of an object
         var us = _usersRepos.Entities();
         return View("Infrastructure/Views/User/List.cshtml", us);
     }

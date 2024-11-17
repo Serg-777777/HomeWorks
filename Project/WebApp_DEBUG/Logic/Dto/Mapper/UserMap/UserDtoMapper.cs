@@ -1,22 +1,22 @@
-﻿
-using WebApp_DEBUG.Domain.Model.UserModel;
+﻿using WebApp_DEBUG.Domain.Model.UserModel;
+using WebApp_DEBUG.Logic.Dto;
 
-namespace WebApp_DEBUG.Domain.Dto.Mapper.UserDtoMapper;
+namespace WebApp_DEBUG.Logic.Dto.Mapper.UserMap;
 
 public class UserModelDto : IDto
 {
-    public string Login { get; set; } = String.Empty;
-    public string Password { get; set; } = String.Empty;
+    public string Login { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
     public string? Email { get; set; }
 }
-public class UserCurrentDto: IDto
+public class UserCurrentDto : IDto
 {
     public int Id { get; set; }
-    public string Login { get; set; } = String.Empty;
+    public string Login { get; set; } = string.Empty;
     public required UserRole UserRole { set; get; }
 }
 
-public class UserInfoDto: IDto
+public class UserInfoDto : IDto
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

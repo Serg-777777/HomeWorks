@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebApp_DEBUG.Domain.Model.UserModel;
 
-namespace WebApp_DEBUG.Domain.Model.UserModel
+namespace WebApp_DEBUG.Infrastructure.Context.UserContext
 {
     class UserContextConfig : IEntityTypeConfiguration<User>
     {
@@ -9,7 +10,7 @@ namespace WebApp_DEBUG.Domain.Model.UserModel
         {
             bild.ComplexProperty(p => p.UserRole).IsRequired();
             bild.UseTpcMappingStrategy();
-          //  bild.HasAlternateKey(p => p.Login);
+            //  bild.HasAlternateKey(p => p.Login);
         }
     }
 }
