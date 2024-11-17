@@ -43,8 +43,7 @@
 
   <ItemGroup>
     <Folder Include="Domain\DBase\" />
-    <Folder Include="Infrastructure\client-files\Loader\" />
-    <Folder Include="Infrastructure\client-files\Styles\" />
+    <Folder Include="Infrastructure\Context\UserProfileContext\" />
     <Folder Include="Setup\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
