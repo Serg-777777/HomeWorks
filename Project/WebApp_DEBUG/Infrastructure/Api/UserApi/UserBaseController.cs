@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApp_DEBUG.Domain.Model.UserModel;
 using WebApp_DEBUG.Logic.Dto;
-using WebApp_DEBUG.Logic.Dto.Mapper.UserMap;
+using WebApp_DEBUG.Logic.Dto.UserDto;
 
 namespace WebApp_DEBUG.Infrastructure.Api.UserApi
 {

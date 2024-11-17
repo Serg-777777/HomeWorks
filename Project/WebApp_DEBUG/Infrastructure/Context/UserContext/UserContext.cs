@@ -19,7 +19,7 @@ namespace WebApp_DEBUG.Infrastructure.Context.UserContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source=Domain/DBase/dbTest.db"); //JSON конфиг
+          //  optionsBuilder.UseSqlite($"Data Source=Domain/DBase/dbTest.db"); //JSON конфиг
             optionsBuilder.LogTo(Console.WriteLine);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

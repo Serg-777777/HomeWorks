@@ -1,7 +1,6 @@
 ﻿using WebApp_DEBUG.Domain.Model.UserModel;
-using WebApp_DEBUG.Logic.Dto;
 
-namespace WebApp_DEBUG.Logic.Dto.Mapper.UserMap;
+namespace WebApp_DEBUG.Logic.Dto.UserDto;
 
 public class UserModelDto : IDto
 {
