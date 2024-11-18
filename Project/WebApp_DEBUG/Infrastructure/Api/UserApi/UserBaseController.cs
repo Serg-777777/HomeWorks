@@ -6,6 +6,7 @@ using WebApp_DEBUG.Logic.Dto.UserDto;
 
 namespace WebApp_DEBUG.Infrastructure.Api.UserApi
 {
+    //тестирование реализации api контроллера
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

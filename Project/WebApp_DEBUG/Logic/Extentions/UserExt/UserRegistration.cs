@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using WebApp_DEBUG.Domain.Model.UserModel;
 using WebApp_DEBUG.Infrastructure.Context.UserContext;
 using WebApp_DEBUG.Logic.Dto;
@@ -10,8 +9,8 @@ public static class UserRegistration
 	{
 		public static IServiceCollection AddUserServices(this IServiceCollection services, IConfiguration config)
 		{
-                services.AddDbContext<UserContext>(p=> p.UseSqlite(@"Data Source=Domain/DBase/dbTest.db"));
-	 			services.AddScoped<IDtoRepository<User,UserModelDto>, UserRepository>();
+                services.AddDbContext<UserContext>(p=> p.UseSqlite(@"Data Source=Domain/DBase/dbTest.db")); //JSON конфиг
+			   services.AddTransient<IDtoRepository<User,UserModelDto>, UserRepository>();
 				services.AddAutoMapper(typeof(UserMapperProfile));
                 return services;
 		}

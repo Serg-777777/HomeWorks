@@ -21,19 +21,19 @@ public class UserController : Controller
     public ActionResult Form()
     {
         var u = new UserModelDto();
-        return View("Infrastructure/Views/User/Form.cshtml", u);
+        return View("Infrastructure/Views/User/Form.cshtml", u); 
     }
     [HttpPost]
     public ActionResult Added(UserModelDto u)
     {
-        _logger.LogWarning($"+++ {u.Login}");
+        _logger.LogWarning($"+++ Controller User ADD: {u.Login}");
         _usersRepos.CreateEntity(u);
         return View("Infrastructure/Views/User/Added.cshtml", u);
     }
     [HttpGet]
     public ActionResult List()
     {
-        _logger.LogWarning($"+++ LIST TEST");
+        _logger.LogWarning($"+++ Controller Users List +++ ");
         //!!! Ошибка - Object reference not set to an instance of an object
         var us = _usersRepos.Entities();
         return View("Infrastructure/Views/User/List.cshtml", us);

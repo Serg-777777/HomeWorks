@@ -10,7 +10,7 @@ namespace WebApp_DEBUG.Infrastructure.Context.UserContext
         {
             bild.ComplexProperty(p => p.UserRole).IsRequired();
             bild.UseTpcMappingStrategy();
-            //  bild.HasAlternateKey(p => p.Login);
+            bild.HasAlternateKey(p => p.Login); 
         }
     }
 }
