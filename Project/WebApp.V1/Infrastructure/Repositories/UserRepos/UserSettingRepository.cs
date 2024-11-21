@@ -5,7 +5,7 @@ namespace Infrastructure.Repositories.UserRepos
 {
     internal class UserSettingRepository : IRepositoryModel<UserSettingModel>
     {
-        public UserSettingModel AddEntity(UserSettingModel model)
+        public bool AddEntity(UserSettingModel model)
         {
             throw new NotImplementedException();
         }
@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories.UserRepos
             throw new NotImplementedException();
         }
 
-        public bool RemoveEntity(UserSettingModel model)
+        public bool RemoveEntity(int id)
         {
             throw new NotImplementedException();
         }

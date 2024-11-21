@@ -5,34 +5,34 @@ namespace Infrastructure.Repositories.UserRepository
 {
     internal class UserRepository : IRepositoryModel<UserModel>
     {
-        List<UserModel> _entities;
+        protected IContextEntity<UserModel> _entities;
         public UserRepository(IContextEntity<UserModel> entities)
         {
-            _entities = entities.Entities;
+            _entities = entities;
         }
-        public UserModel AddEntity(UserModel model)
+        public bool AddEntity(UserModel model)
         {
-            _entities.Add(model);
-            return model;
+            _entities.Entities.Add(model);
+            return true;
         }
 
-        public IReadOnlyCollection<UserModel> Entities() => _entities;
+        public IReadOnlyCollection<UserModel> Entities() => (IReadOnlyCollection <UserModel>)_entities.Entities;
 
         public UserModel GetEntity(int id)
         {
-            var e = _entities.FirstOrDefault(p => p.Id == id);
+            var e = _entities.Entities.FirstOrDefault(p => p.Id == id);
             return e!;
         }
 
         public bool RemoveEntity(int id)
         {
-            var e = _entities.FirstOrDefault(p => p.Id == id);
+            var e = _entities.Entities.FirstOrDefault(p => p.Id == id);
             return true;
         }
 
         public bool UpdateEntity(UserModel model)
         {
-            var e = _entities.FirstOrDefault(p => p.Id == model.Id);
+            var e = _entities.Entities.FirstOrDefault(p => p.Id == model.Id);
             e = model;
             return true;
         }

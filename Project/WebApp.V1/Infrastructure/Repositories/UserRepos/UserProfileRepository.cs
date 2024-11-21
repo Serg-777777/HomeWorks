@@ -6,8 +6,7 @@ namespace Infrastructure.Repositories.UserRepository
 {
     internal class UserProfileRepository : IRepositoryModel<UserProfileModel>
     {
-
-        public UserProfileModel AddEntity(UserProfileModel model)
+        public bool AddEntity(UserProfileModel model)
         {
             throw new NotImplementedException();
         }
@@ -22,7 +21,7 @@ namespace Infrastructure.Repositories.UserRepository
             throw new NotImplementedException();
         }
 
-        public bool RemoveEntity(UserProfileModel model)
+        public bool RemoveEntity(int id)
         {
             throw new NotImplementedException();
         }
