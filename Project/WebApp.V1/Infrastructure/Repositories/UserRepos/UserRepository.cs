@@ -5,14 +5,14 @@ namespace Infrastructure.Repositories.UserRepository
 {
     internal class UserRepository : IRepositoryModel<UserModel>
     {
-        protected IContextEntity<UserModel> _entities;
+        protected  IContextEntity<UserModel> _entities;
         public UserRepository(IContextEntity<UserModel> entities)
         {
             _entities = entities;
         }
         public bool AddEntity(UserModel model)
         {
-            _entities.Entities.Add(model);
+            _entities.Entities.Append(model);
             return true;
         }
 
