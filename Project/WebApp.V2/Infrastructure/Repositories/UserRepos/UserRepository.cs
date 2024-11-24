@@ -18,19 +18,16 @@ public class UserRepository : IUserRepository<UserModel>
         if(user.AddUser()) return user;
         throw new ArgumentNullException(user.Login, "Пользователь не добавлен");
     }
-
     public UserModel? GetUserByLogin(string login)
     {
        var user = new UserModel(login);
         return user;
     }
-
     public UserProfileModel? GetProfileUserByLogin(string login)
     {
         var profile = new UserModel(login).UserProfile;
         return profile;
     }
-
     public bool RemoveUserByLogin(string login)
     {
         var user = new UserModel(login);
