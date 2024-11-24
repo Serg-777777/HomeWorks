@@ -3,10 +3,10 @@ using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos;
 
-public class UserRepository : IUserRepository<UserModel>
+sealed public class UserRepository : IUserRepository<UserModel>
 {
 
-    public UserModel CreateUser(int idUser, int idProfile, int idSettings,
+    public UserModel? CreateUser(int idUser, int idProfile, int idSettings,
        string Login, string Password, string Email,
         string? FirstName, string? LastName, string? Country, string? City, int? Age)
     {
@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository<UserModel>
         var user = new UserModel(idUser, false, Login, Password!, Email!, profile, setting, role);
         
         if(user.AddUser()) return user;
-        throw new ArgumentNullException(user.Login, "Пользователь не добавлен");
+        return null;
     }
     public UserModel? GetUserByLogin(string login)
     {
@@ -32,8 +32,8 @@ public class UserRepository : IUserRepository<UserModel>
     {
         var user = new UserModel(login);
         if(user.RemoveUser())
-        return true;
-        throw new ArgumentNullException(login, "Пользователь не удалён");
+           return true;
+        return false;
     }
 
 }
