@@ -4,7 +4,7 @@ using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos;
 
-public interface IUserRepository<TBaseModel> where TBaseModel : EntityBase<UserModel>
+public partial interface IUserRepository<TBaseModel> where TBaseModel : EntityBase<UserModel>
 {
     UserModel? GetUserByLogin(string login);
     UserProfileModel? GetProfileUserByLogin(string login);
