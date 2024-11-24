@@ -6,14 +6,14 @@ namespace Domain.Models.UserModels;
     public const string EntityName= "UserModel";
 
     public int Id { private set; get; }
-    public bool isDeleted { private set; get; } = false;
-    public string? Login { private set; get; } = null;
-    public string? Password { private set; get; } = null;
-    public string? Email { private set; get; } = null;
+    public bool isDeleted { private set; get; } 
+    public string Login { private set; get; }
+    public string Password { private set; get; }
+    public string Email { private set; get; } 
 
-    public UserProfileModel? UserProfile { private set; get; } = default;
-    public UserSettingModel? UserSetting { private set; get; } = default;
-    public UserRoleModel? UserRole { private set; get; } = default;
+    public UserProfileModel UserProfile { private set; get; } 
+    public UserSettingModel UserSetting { private set; get; } 
+    public UserRoleModel UserRole { private set; get; } 
 
     public UserModel(string login)
     {
