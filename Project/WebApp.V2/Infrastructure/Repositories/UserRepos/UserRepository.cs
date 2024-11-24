@@ -39,6 +39,4 @@ public class UserRepository : IUserRepository<UserModel>
         throw new ArgumentNullException(login, "Пользователь не удалён");
     }
 
-
-
 }
