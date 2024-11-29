@@ -2,9 +2,8 @@
 
 namespace Domain.Models.UserModels
 {
-    public partial interface IUserProfileRepository<TBaseModel> where TBaseModel : EntityBase<UserProfileModel>
+    public interface IUserProfileRepository : IRepositoryCRUD<UserProfileModel>
     {
-        UserProfileModel? GetProfileByUserId(int idUser);
-        bool UpdateProfileByUserId(int idUser, string? firstName, string? lastName, string? country, string? city, int? age);
+        UserSettingModel? GetSettingsByUserId(int idUser);
     }
 }

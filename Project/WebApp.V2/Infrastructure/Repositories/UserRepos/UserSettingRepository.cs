@@ -4,18 +4,39 @@ using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos
 {
-    sealed public partial class UserSettingRepository : IUserSettingsRepository<UserSettingModel>
+    sealed public class UserSettingRepository : IUserSettingsRepository
     {
-        public UserSettingModel? GetSettingsByUserId(int idUser)
+        ICollection<UserSettingModel> _settings;
+        public UserSettingRepository(ICollection<UserSettingModel> settings)
         {
-            var settings = new UserSettingModel().Entities().FirstOrDefault(s=>s.UserModelId==idUser);
-            return settings;
+            _settings = settings;
         }
 
-        public bool UpdateSettingsByUserId(int idUser, bool isLoadFiles, bool isDownLoadFiles)
+        public IReadOnlyCollection<UserSettingModel> Entities => _settings.ToList();
+
+        public bool AddEntity(UserSettingModel entity)
         {
-            var res = new UserSettingModel().UpdateValues(idUser,isLoadFiles, isDownLoadFiles);
-            return res;
+            throw new NotImplementedException();
+        }
+
+        public UserSettingModel? GetEntity(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserSettingModel? GetSettingsByUserId(int idUser)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RemoveEntity(int entityID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserSettingModel UpdateEntity(UserSettingModel entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

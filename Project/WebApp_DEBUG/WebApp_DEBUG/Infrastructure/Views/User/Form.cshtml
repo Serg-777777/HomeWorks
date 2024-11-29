@@ -1,0 +1,17 @@
+﻿@model WebApp_DEBUG.Domain.Dto.Mapper.UserDtoMapper.UserModelDto
+
+@{
+    Layout = "/Infrastructure/Views/Shared/_Master.cshtml";
+    ViewData["title"] = "FORM";
+}
+
+<div>
+   <form method="post"> 
+       <table>
+           <tr><td>Логин:</td><td><input name="Login" /></td></tr>
+            <tr><td>Пароль: </td><td><input name="Password" /></td></tr>
+            <tr><td>Мэйл: </td><td><input name="Email" /></td></tr>
+            <tr><td><button formaction="/user/added" type="submit">Send</button></td><td></td></tr>
+        </table>
+   </form>
+</div>

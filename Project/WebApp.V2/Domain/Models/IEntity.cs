@@ -2,7 +2,6 @@
 
 namespace Domain.Models
 {
-    public partial interface IEntity
-    {
-    }
+    public interface IEntity : IEquatable<object>
+    { }
 }

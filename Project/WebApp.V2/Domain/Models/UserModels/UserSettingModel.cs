@@ -1,55 +1,29 @@
 ﻿
 namespace Domain.Models.UserModels;
 
-   sealed public partial class UserSettingModel:EntityBase<UserSettingModel>, IEntity
+   sealed public class UserSettingModel: IEntity
     {
         public const string EntityName = " UserSettingMode";
 
-        public int? Id { private set; get; }
-        public bool isLoadFiles { private set; get; } = false; //загрузка файлов на сервер
-        public bool isDownLoadFiles { private set; get; } = true; //скачивание файлов с сервера
-        public int? UserModelId { private set; get; }
+        public int Id { get; private set; }
+        public bool IsLoadFiles { get; private set; } = false; //загрузка файлов на сервер
+        public bool IsDownLoadFiles { get; private set; } = true; //скачивание файлов с сервера
+        public bool IsPlacePost { get; private set; } = true; // постить пост
+        public bool IsReadPost { get; private set; } = true; // читать пост
+        public int? UserModelId { get; private set; }
 
-        public UserSettingModel(int id, bool isLoadFiles, bool isDownLoadFiles, int userModelId)
-        {
-            Id = id;
-            this.isLoadFiles = isLoadFiles;
-            this.isDownLoadFiles = isDownLoadFiles;
-            UserModelId = userModelId;
-        }
-        public UserSettingModel()
-         {
-            this.Id = null;
-            this.UserModelId=null;
-         }
-         
-        public bool UpdateValues(int idUser, bool isLoadFiles, bool isDownLoadFiles)
-        {
-            var settings = base._entities.Value.FirstOrDefault(s => s.UserModelId == idUser);
+    public UserSettingModel(bool isLoadFiles, bool isDownLoadFiles, bool isPlaceText, bool isReadText, int? userModelId)
+    {
+        IsLoadFiles = isLoadFiles;
+        IsDownLoadFiles = isDownLoadFiles;
+        IsPlacePost = isPlaceText;
+        IsReadPost = isReadText;
+        UserModelId = userModelId;
+    }
 
-            if(settings!=null)
-            {
-                settings.isLoadFiles = isLoadFiles;
-                settings.isDownLoadFiles = isDownLoadFiles;
-                return true;
-            }
-             return false;
-        }
+        
 
-        public UserSettingModel? AddSettings()
-        {
-            if(this.Id!=null)
-                return base.AddEntity(this);
-            return null;
-        }
-        public bool RemoveSettings()
-        {
-            if (this.Id != null)
-             return base.RemoveEntity(this);
-            return false;
-        }
-
-        public override bool Equals(UserSettingModel? other)
+        public bool Equals(UserSettingModel? other)
         {
             return this.Id == other?.Id;
         }

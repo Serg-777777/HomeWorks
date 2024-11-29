@@ -4,19 +4,41 @@ using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos
 {
-    sealed public partial class UserProfileRepository : IUserProfileRepository<UserProfileModel>
+    sealed public class UserProfileRepository : IUserProfileRepository
     {
-        public UserProfileModel? GetProfileByUserId(int idUser)
+        ICollection<UserProfileModel> _profiles;
+        public UserProfileRepository(ICollection<UserProfileModel> profiles)
         {
-            var profile =new UserProfileModel().Entities().FirstOrDefault(p=> p.UserModelId == idUser);
-            return profile;
+            _profiles = profiles;
         }
 
-        public bool UpdateProfileByUserId(int idUser, string? firstName, string? lastName, string? country, string? city, int? age)
+        public IReadOnlyCollection<UserProfileModel> Entities => _profiles.ToList();
+
+        public bool AddEntity(UserProfileModel entity)
         {
-            var res = new UserProfileModel().UpdateValues(idUser, firstName, lastName, country, city, age);
-            return res;
+            throw new NotImplementedException();
         }
+
+        public UserProfileModel GetEntity(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserSettingModel? GetSettingsByUserId(int idUser)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RemoveEntity(int entityID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserProfileModel UpdateEntity(UserProfileModel entity)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

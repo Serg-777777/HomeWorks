@@ -1,39 +1,61 @@
 ﻿
+using Domain.Models;
 using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos;
 
-sealed public class UserRepository : IUserRepository<UserModel>
+sealed public class UserRepository : IUserRepository
 {
+    ICollection<UserModel> _users;
+    IRepositoryCRUD<UserProfileModel> _profilesRepos;
+    IRepositoryCRUD<UserSettingModel> _settingsRepos;
 
-    public UserModel? CreateUser(int idUser, int idProfile, int idSettings,
-       string Login, string Password, string Email,
-        string? FirstName, string? LastName, string? Country, string? City, int? Age)
+    public IReadOnlyCollection<UserModel> Entities => _users.ToList() ;
+
+    public UserRepository(ICollection<UserModel> users, IRepositoryCRUD<UserProfileModel> profilesRepos, IRepositoryCRUD<UserSettingModel> settingsRepos)
     {
-        var setting = new UserSettingModel(idSettings, false, true, idUser);
-        var profile = new UserProfileModel(idProfile, FirstName, LastName, Country, City, Age, idUser);
-        var role = new UserRoleModel() { RoleUser = "пользователь" };
-        var user = new UserModel(idUser, false, Login, Password!, Email!, profile, setting, role);
-        
-        if(user.AddUser()) return user;
-        return null;
+        _users = users;
+        _profilesRepos = profilesRepos;
+        _settingsRepos = settingsRepos;
     }
-    public UserModel? GetUserByLogin(string login)
+
+    // для вывода нестандартных отчётов
+    public object GetReport(IEntityVisitor<UserModel> entityVisitor)
     {
-       var user = new UserModel(login);
-        return user;
+        return entityVisitor.Excute(this);
+    }
+
+    public bool AddEntity(UserModel entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public UserModel? GetEntity(int id)
+    {
+        throw new NotImplementedException();
+    }
+    public UserModel? GetEntity(string login)
+    {
+        throw new NotImplementedException();
     }
     public UserProfileModel? GetProfileUserByLogin(string login)
     {
-        var profile = new UserModel(login).UserProfile;
-        return profile;
+        throw new NotImplementedException();
     }
-    public bool RemoveUserByLogin(string login)
+    public bool RemoveEntity(int entityID)
     {
-        var user = new UserModel(login);
-        if(user.RemoveUser())
-           return true;
-        return false;
+        throw new NotImplementedException();
     }
-
+    public bool RemoveEntity(string login)
+    {
+        throw new NotImplementedException();
+    }
+    public UserModel UpdateEntity(UserModel entity)
+    {
+        throw new NotImplementedException();
+    }
+    public UserSettingModel? GetSettingUserByLogin(string login)
+    {
+        throw new NotImplementedException();
+    }
 }
