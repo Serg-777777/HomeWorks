@@ -60,7 +60,7 @@ public class UserController : ControllerBase
         return Ok(userDtoApp);
     }
 
-    [HttpPost("profile/update/{login}")]
+    [HttpPut("profile/update/{login}")]
     public ActionResult<UserProfileDtoApp> UpdateProfile([FromQuery] string login, [FromBody] UserProfileDtoApp userProfile)
     {
         var userProfileLogic = _mapper.Map<UserProfileDtoLogic>(userProfile);
@@ -68,11 +68,12 @@ public class UserController : ControllerBase
         return Ok(userProfile);
     }
 
-    [HttpPost("profile/{login}")]
+    [HttpGet("profile/{login}")]
     public ActionResult<UserProfileDtoApp?> GetProfile([FromQuery] string login)
     {
         var profileLogic = _userAdapter.GetProfile(login);
         var profileApp = _mapper.Map<UserProfileDtoApp>(profileLogic);
         return profileApp;
     }
+    
 }
