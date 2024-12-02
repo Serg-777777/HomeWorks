@@ -1,8 +1,8 @@
 ﻿
 
 namespace Domain.Models;
-
-public interface IRepositoryCRUD<TEntity> where TEntity : IEntity
+   
+public interface IRepository<TEntity> where TEntity : IEntity
 {
     TEntity? GetEntity(int id);
     bool AddEntity(TEntity entity);

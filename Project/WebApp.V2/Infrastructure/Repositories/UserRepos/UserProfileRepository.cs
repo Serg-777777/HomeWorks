@@ -1,15 +1,17 @@
 ﻿
 
 using Domain.Models.UserModels;
+using Infrastructure.Contexts.UserContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
     sealed public class UserProfileRepository : IUserProfileRepository
     {
-        ICollection<UserProfileModel> _profiles;
-        public UserProfileRepository(ICollection<UserProfileModel> profiles)
+        DbSet<UserProfileModel>  _profiles;
+        public UserProfileRepository(UserContext userContext)
         {
-            _profiles = profiles;
+            _profiles = userContext.UserProfiles;
         }
 
         public IReadOnlyCollection<UserProfileModel> Entities => _profiles.ToList();

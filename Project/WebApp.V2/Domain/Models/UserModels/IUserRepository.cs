@@ -4,11 +4,11 @@ using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos;
 
-public interface IUserRepository : IRepositoryCRUD<UserModel>
+public interface IUserRepository : IRepository<UserModel>
 {
     UserModel? GetEntity(string login);
-    UserProfileModel? GetProfileUserByLogin(string login);
-    UserSettingModel? GetSettingUserByLogin(string login);
+    UserProfileModel? GetProfile(int idUser);
+    UserSettingModel? UpdateSetting(int idUser, UserSettingModel userSetting);
     bool RemoveEntity(string login);
 
 }

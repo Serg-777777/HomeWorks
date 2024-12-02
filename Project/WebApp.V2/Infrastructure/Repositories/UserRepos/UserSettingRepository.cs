@@ -1,15 +1,17 @@
 ﻿
 
 using Domain.Models.UserModels;
+using Infrastructure.Contexts.UserContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
     sealed public class UserSettingRepository : IUserSettingsRepository
     {
-        ICollection<UserSettingModel> _settings;
-        public UserSettingRepository(ICollection<UserSettingModel> settings)
+        DbSet<UserSettingModel> _settings;
+        public UserSettingRepository(UserContext userContext)
         {
-            _settings = settings;
+            _settings = userContext.UserSettings;
         }
 
         public IReadOnlyCollection<UserSettingModel> Entities => _settings.ToList();

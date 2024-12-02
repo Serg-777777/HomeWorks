@@ -2,5 +2,5 @@
 
 public interface IEntityVisitor<TEntity> where TEntity : IEntity
 {
-    object Excute(IRepositoryCRUD<TEntity> repositoryCRUD);
+    object Excute(IReadOnlyCollection<TEntity> readOnlyConnection);
 }

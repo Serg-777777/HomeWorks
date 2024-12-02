@@ -1,48 +1,67 @@
 ﻿
 using Domain.Models;
 using Domain.Models.UserModels;
+using Infrastructure.Contexts.UserContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos;
 
 sealed public class UserRepository : IUserRepository
 {
-    ICollection<UserModel> _users;
-    IRepositoryCRUD<UserProfileModel> _profilesRepos;
-    IRepositoryCRUD<UserSettingModel> _settingsRepos;
+    UserContext _userContext = default!;
 
-    public IReadOnlyCollection<UserModel> Entities => _users.ToList() ;
-
-    public UserRepository(ICollection<UserModel> users, IRepositoryCRUD<UserProfileModel> profilesRepos, IRepositoryCRUD<UserSettingModel> settingsRepos)
+    public UserRepository(UserContext userContext)
     {
-        _users = users;
-        _profilesRepos = profilesRepos;
-        _settingsRepos = settingsRepos;
-    }
+        _userContext = userContext;
 
-    // для вывода нестандартных отчётов
-    public object GetReport(IEntityVisitor<UserModel> entityVisitor)
-    {
-        return entityVisitor.Excute(this);
     }
+    public IReadOnlyCollection<UserModel> Entities => (IReadOnlyCollection<UserModel>) _userContext.Users.AsNoTracking().AsQueryable();
 
     public bool AddEntity(UserModel entity)
     {
-        throw new NotImplementedException();
-    }
-
-    public UserModel? GetEntity(int id)
-    {
-        throw new NotImplementedException();
+        var newUser = _userContext.Users.Add(entity);
+        _userContext.SaveChanges();
+        
+        return true;
     }
     public UserModel? GetEntity(string login)
     {
-        throw new NotImplementedException();
+       var user = _userContext.Users.AsNoTracking().FirstOrDefault(u => u.Login == login);
+        return user;
     }
-    public UserProfileModel? GetProfileUserByLogin(string login)
+    public UserModel UpdateEntity(UserModel entity)
+    {
+        var user = GetEntity(entity.Login);
+        _userContext.Users.Update(entity);
+        _userContext.SaveChanges();
+        return user!;
+    }
+    public UserProfileModel? GetProfile(int idUser)
+    {
+        var profile = _userContext.UserProfiles.AsNoTracking().FirstOrDefault(p => p.UserModelId == idUser);
+        return profile;
+    }
+    public UserProfileModel? UpdateProfile(int userID, UserProfileModel userProfile)
+    {
+        var profile = _userContext.UserProfiles.FirstOrDefault(p => p.UserModelId == userID);
+        profile?.SetValues(userProfile);
+        _userContext.UserProfiles.Update(profile!);
+        _userContext.SaveChanges();
+
+        return userProfile;
+    }
+
+
+    //не настроены
+    public UserSettingModel? UpdateSetting(int userID, UserSettingModel userSetting)
     {
         throw new NotImplementedException();
     }
-    public bool RemoveEntity(int entityID)
+    public UserModel? GetEntity(int userId)
+    {
+        throw new NotImplementedException();
+    }
+    public bool RemoveEntity(int userID)
     {
         throw new NotImplementedException();
     }
@@ -50,12 +69,8 @@ sealed public class UserRepository : IUserRepository
     {
         throw new NotImplementedException();
     }
-    public UserModel UpdateEntity(UserModel entity)
+    public object GetReport(IEntityVisitor<UserModel> entityVisitor)
     {
-        throw new NotImplementedException();
-    }
-    public UserSettingModel? GetSettingUserByLogin(string login)
-    {
-        throw new NotImplementedException();
+        return entityVisitor.Excute((IReadOnlyCollection<UserModel>) this.Entities.Select(p => p.IsDeleted == false));
     }
 }
