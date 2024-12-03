@@ -15,7 +15,7 @@ sealed public class UserRepository : IUserRepository
         _userContext = userContext;
 
     }
-    public IReadOnlyCollection<UserModel> Entities => (IReadOnlyCollection<UserModel>) _userContext.Users.AsNoTracking().AsQueryable();
+    public IReadOnlyCollection<UserModel> Entities => (IReadOnlyCollection<UserModel>)_userContext.Users.AsNoTracking().AsQueryable();
 
     public bool AddEntity(UserModel entity)
     {
@@ -23,13 +23,13 @@ sealed public class UserRepository : IUserRepository
         _userContext.UserProfiles.Add(entity.UserProfile!);
         _userContext.UserSettings.Add(entity.UserSetting!);
         _userContext.SaveChanges();
-        
+
         return true;
     }
 
     public UserModel? GetEntity(string login)
     {
-       var user = _userContext.Users.AsNoTracking().FirstOrDefault(u => u.Login == login);
+        var user = _userContext.Users.AsNoTracking().FirstOrDefault(u => u.Login == login);
         return user;
     }
     public UserProfileModel? GetProfile(string login)
@@ -63,12 +63,12 @@ sealed public class UserRepository : IUserRepository
     {
         throw new NotImplementedException();
     }
-
-
     public bool RemoveEntity(string login)
     {
-        throw new NotImplementedException();
+        var u = _userContext.Users.FirstOrDefault(u => u.Login == login);
+        u?.SetDelete(true);
+        _userContext?.Update(u!);
+        return true;
     }
 
-   
 }

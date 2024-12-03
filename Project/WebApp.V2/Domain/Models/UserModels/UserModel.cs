@@ -2,16 +2,16 @@
 
 namespace Domain.Models.UserModels;
 
- sealed public class UserModel: IEntity
+sealed public class UserModel : IEntity
 {
-    public const string TableName= "Users";
+    public const string TableName = "Users";
 
-        public int Id { get; private set; }
-        public DateTime DateCreated { get; private set; }
-        public bool IsDeleted { get; private set; } = false;
-        public string Login { get; private set; }
-        public string Password { get; private set; }
-        public string Email { get; private set; }
+    public int Id { get; private set; }
+    public DateTime DateCreated { get; private set; }
+    public bool IsDeleted { get; private set; } = false;
+    public string Login { get; private set; }
+    public string Password { get; private set; }
+    public string Email { get; private set; }
 
     public UserProfileModel? UserProfile { get; private set; } = null;
     public UserSettingModel? UserSetting { get; private set; } = null;
@@ -31,13 +31,16 @@ namespace Domain.Models.UserModels;
     {
         return (this.Id == other?.Id || this.Login == other?.Login);
     }
-
+    public UserModel SetDelete(bool val)
+    {
+        this.IsDeleted = val;
+        return this;
+    }
     public UserModel SetDateCreated(DateTime dateTime)
     {
         this.DateCreated = dateTime;
         return this;
     }
-
     public UserModel CreateSettings(UserSettingModel userSetting)
     {
         this.UserSetting = userSetting;

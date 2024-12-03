@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories.UserRepos
 {
     sealed public class UserProfileRepository : IUserProfileRepository
     {
-        DbSet<UserProfileModel>  _profiles;
+        DbSet<UserProfileModel> _profiles;
         public UserProfileRepository(UserContext userContext)
         {
             _profiles = userContext.UserProfiles;

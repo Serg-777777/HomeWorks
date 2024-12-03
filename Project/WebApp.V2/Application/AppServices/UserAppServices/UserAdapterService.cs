@@ -1,4 +1,5 @@
 ﻿
+
 using AutoMapper;
 using Domain.Models.UserModels;
 using Infrastructure.DtoLogics.UserDtoLogics;
@@ -18,7 +19,7 @@ public class UserAdapterService
         _mapper = mapper;
         _logger = logger;
     }
- 
+
     public IReadOnlyCollection<UserDtoLogic> GetUsers()
     {
         var users = _userRepository.Entities.AsQueryable();
@@ -31,6 +32,22 @@ public class UserAdapterService
         var userLogic = _mapper.Map<UserDtoLogic>(user);
         return userLogic;
     }
+    public UserProfileDtoLogic? GetProfile(string login)
+    {
+        var prof = _userRepository?.GetProfile(login);
+        var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
+        return profLogic;
+
+        //var userProfile = _userRepository?.GetEntity(login)?.UserProfile;
+        //return userProfile;
+    }
+    public UserSettingDtoLogic GetSetting(string login)
+    {
+        var sett = _userRepository.GetSetting(login);
+        var settLogic = _mapper.Map<UserSettingDtoLogic>(sett);
+        return settLogic;
+    }
+
     public bool CreateUser(UserDtoLogic userDtoLogic, UserProfileDtoLogic userProfileLogic)
     {
         var user = _mapper.Map<UserModel>(userDtoLogic);
@@ -47,6 +64,13 @@ public class UserAdapterService
 
         return true;
     }
+
+    public bool UpdateUser(string login, UserDtoLogic userDtoLogic)
+    {
+        var user = _mapper.Map<UserModel>(userDtoLogic);
+        _userRepository.UpdateEntity(login, user);
+        return true;
+    }
     public bool UpdateProfile(string login, UserProfileDtoLogic userProfileLogic)
     {
         var newProfile = _mapper.Map<UserProfileModel>(userProfileLogic);
@@ -55,14 +79,17 @@ public class UserAdapterService
 
         return true;
     }
-    public UserProfileDtoLogic?  GetProfile(string login)
+    public bool UpdateSetting(string login, UserSettingDtoLogic settingDtoLogic)
     {
-        var userId = _userRepository?.GetEntity(login)?.Login!;
-        var prof = _userRepository?.GetProfile(userId!);
-        var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
-        return profLogic;
+        var newSett = _mapper.Map<UserSettingModel>(settingDtoLogic);
+        _userRepository.UpdateSetting(login, newSett);
 
-        //var userProfile = _userRepository?.GetEntity(login)?.UserProfile;
-        //return userProfile;
+        return true;
     }
+    public bool DeleteUser(UserDtoLogic userDtoLogic)
+    {
+        var res = _userRepository.RemoveEntity(userDtoLogic?.Login!);
+        return res;
+    }
+
 }

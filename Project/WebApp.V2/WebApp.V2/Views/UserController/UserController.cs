@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.DtoApps.UserDtoApps;
+using Application.ServicesApps.UserServicesApps;
+using AutoMapper;
+using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Views.UserController
@@ -6,80 +9,97 @@ namespace Presentation.Views.UserController
     [Route("[controller]")]
     public class UserController : Controller
     {
+        private readonly ILogger<UserController> _logger;
+        private UserAdapterService _userAdapter;
+        private IMapper _mapper;
+        public UserController(UserAdapterService userAdapter, IMapper mapper, ILogger<UserController> logger)
+        {
+            _logger = logger;
+            _userAdapter = userAdapter;
+            _mapper = mapper;
+        }
 
         [HttpGet]
         public ActionResult Index()
         {
-            
-            return View();
+            var userDtoApp = new UserDtoApp();
+            ViewBag.Profile = new UserProfileDtoApp();
+            ViewBag.Setting = new UserSettingDtoApp();
+            return View(userDtoApp);
         }
 
-        [HttpGet("{login:maxlength(20)}")]
+        [HttpGet("{login}")]
         public ActionResult Details(string login)
         {
-            return View();
-        }
-        [HttpPost]
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
+            var userLogic = _userAdapter.GetUser(login);
+            var userApp = _mapper.Map<UserDtoApp>(userLogic);
+            return View(userApp);
         }
 
-        // POST: UserController/Create
+        [HttpGet("{login}/profile")]
+        public ActionResult Profile(string login)
+        {
+            var prof = _userAdapter.GetProfile(login);
+            var profApp = _mapper.Map<UserProfileDtoApp>(prof);
+            return View(profApp);
+        }
+
+        [HttpGet("{login}/setting")]
+        public ActionResult Setting(string login)
+        {
+            var sett = _userAdapter.GetSetting(login);
+            var settApp = _mapper.Map<UserSettingDtoApp>(sett);
+            return View(settApp);
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        public ActionResult Add(UserDtoApp userDtoApp, UserProfileDtoApp profileDtoApp)
+        {
+            var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
+            var profLogic = _mapper.Map<UserProfileDtoLogic>(profileDtoApp);
+            _userAdapter.CreateUser(userLogic, profLogic);
+
+            return RedirectToAction(nameof(Details), userLogic.Login);
+        }
+
+        [HttpPut("{login}/edit")]
+        public ActionResult EditUser(string login, UserDtoApp userDtoApp)
+        {
+            var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
+            _userAdapter.UpdateUser(login, userLogic);
+            return RedirectToAction(nameof(Details), userLogic.Login);
+        }
+
+        [HttpPut("{login}/profile/edit")]
+        public ActionResult EditProfile(string login, UserProfileDtoApp profileDtoApp)
+        {
+            var userLogic = _mapper.Map<UserProfileDtoLogic>(profileDtoApp);
+            _userAdapter.UpdateProfile(login, userLogic);
+            return RedirectToAction(nameof(Profile), $"{login}/profile");
+        }
+
+        [HttpPut("{login}/setting/edit")]
+        public ActionResult EditeSetting(string login, UserSettingDtoApp settingDtoApp)
+        {
+            var settLogic = _mapper.Map<UserSettingDtoLogic>(settingDtoApp);
+            _userAdapter.UpdateSetting(login, settLogic);
+            return RedirectToAction(nameof(Setting), $"{login}/setting");
+        }
+
+        [HttpDelete("{login}/delete")]
+        public ActionResult Delete(string login)
+        {
+            var userLogic = new UserDtoLogic() { Login = login };
+            var res = _userAdapter.DeleteUser(userLogic);
+            return RedirectToAction(nameof(Index));
+        }
+
+        //rкак получить несколько объектов из тела запроса?
+        [NonAction]
         public ActionResult Create(IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
