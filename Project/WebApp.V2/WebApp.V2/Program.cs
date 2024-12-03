@@ -2,19 +2,17 @@ using Application.ServicesApps.Mappers.UserMappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
+builder.Services.AddMvcCore();
 builder.Services.AddAutoMapper(typeof(UserMapperProfile));
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
+app.MapControllerRoute(
+    name: "users",
+    pattern: "User/{login}/{action}");
+
+app.MapGet("/", () => "Welcome!!! ");
 app.Run();

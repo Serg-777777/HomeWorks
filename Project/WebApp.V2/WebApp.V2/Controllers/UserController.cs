@@ -10,9 +10,9 @@ namespace Presentation.Views.UserController
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
-        private UserAdapterService _userAdapter;
+        private UserMapperService _userAdapter;
         private IMapper _mapper;
-        public UserController(UserAdapterService userAdapter, IMapper mapper, ILogger<UserController> logger)
+        public UserController(UserMapperService userAdapter, IMapper mapper, ILogger<UserController> logger)
         {
             _logger = logger;
             _userAdapter = userAdapter;

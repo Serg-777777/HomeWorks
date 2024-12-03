@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.ServicesApps.UserServicesApps;
 
-public class UserAdapterService
+public class UserMapperService
 {
     UserRepository _userRepository;
     IMapper _mapper;
-    ILogger<UserAdapterService> _logger;
-    public UserAdapterService(UserRepository userRepository, IMapper mapper, ILogger<UserAdapterService> logger)
+    ILogger<UserMapperService> _logger;
+    public UserMapperService(UserRepository userRepository, IMapper mapper, ILogger<UserMapperService> logger)
     {
         _userRepository = userRepository;
         _mapper = mapper;
