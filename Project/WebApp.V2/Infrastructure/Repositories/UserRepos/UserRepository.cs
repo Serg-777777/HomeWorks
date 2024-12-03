@@ -19,58 +19,56 @@ sealed public class UserRepository : IUserRepository
 
     public bool AddEntity(UserModel entity)
     {
-        var newUser = _userContext.Users.Add(entity);
+        _userContext.Users.Add(entity);
+        _userContext.UserProfiles.Add(entity.UserProfile!);
+        _userContext.UserSettings.Add(entity.UserSetting!);
         _userContext.SaveChanges();
         
         return true;
     }
+
     public UserModel? GetEntity(string login)
     {
        var user = _userContext.Users.AsNoTracking().FirstOrDefault(u => u.Login == login);
         return user;
     }
-    public UserModel UpdateEntity(UserModel entity)
+    public UserProfileModel? GetProfile(string login)
     {
-        var user = GetEntity(entity.Login);
+        var profile = _userContext.UserProfiles.AsNoTracking().FirstOrDefault(p => p.UserLoginKey == login);
+        return profile;
+    }
+    public UserSettingModel? GetSetting(string login)
+    {
+        var settings = _userContext.UserSettings.FirstOrDefault(s => s.UserLoginKey == login);
+        return settings;
+    }
+
+    public UserModel UpdateEntity(string entityID, UserModel entity)
+    {
+        var user = GetEntity(entityID);
         _userContext.Users.Update(entity);
         _userContext.SaveChanges();
         return user!;
     }
-    public UserProfileModel? GetProfile(int idUser)
+    public UserProfileModel? UpdateProfile(string userLogin, UserProfileModel userProfile)
     {
-        var profile = _userContext.UserProfiles.AsNoTracking().FirstOrDefault(p => p.UserModelId == idUser);
-        return profile;
-    }
-    public UserProfileModel? UpdateProfile(int userID, UserProfileModel userProfile)
-    {
-        var profile = _userContext.UserProfiles.FirstOrDefault(p => p.UserModelId == userID);
+        var profile = _userContext.UserProfiles.FirstOrDefault(p => p.UserLoginKey == userLogin);
         profile?.SetValues(userProfile);
         _userContext.UserProfiles.Update(profile!);
         _userContext.SaveChanges();
 
         return userProfile;
     }
+    public UserSettingModel? UpdateSetting(string userLogin, UserSettingModel userSetting)
+    {
+        throw new NotImplementedException();
+    }
 
 
-    //не настроены
-    public UserSettingModel? UpdateSetting(int userID, UserSettingModel userSetting)
-    {
-        throw new NotImplementedException();
-    }
-    public UserModel? GetEntity(int userId)
-    {
-        throw new NotImplementedException();
-    }
-    public bool RemoveEntity(int userID)
-    {
-        throw new NotImplementedException();
-    }
     public bool RemoveEntity(string login)
     {
         throw new NotImplementedException();
     }
-    public object GetReport(IEntityVisitor<UserModel> entityVisitor)
-    {
-        return entityVisitor.Excute((IReadOnlyCollection<UserModel>) this.Entities.Select(p => p.IsDeleted == false));
-    }
+
+   
 }

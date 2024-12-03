@@ -2,8 +2,8 @@
 
 public class UserSettingDtoLogic:IUserDtoLogic
 {
-    public bool? IsLoadFiles { get; set; }
-    public bool? IsDownLoadFiles { get; set; }
-    public bool? IsPlacePost { get; set; }
-    public bool? IsReadPost { get; set; }
+    public bool? IsLoadFiles { get; set; } = false;
+    public bool? IsDownLoadFiles { get; set; } = true;
+    public bool? IsPlacePost { get; set; } = true;
+    public bool? IsReadPost { get; set; } = true;
 }

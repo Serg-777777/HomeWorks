@@ -11,16 +11,16 @@ namespace Domain.Models.UserModels;
         public string? Country { get; private set; }
         public string? City { get; private set; }
         public int? Age { get; private set; }
-        public int UserModelId { get; private set; }
+        public string UserLoginKey { get; private set; }
 
-    public UserProfileModel(int id, string? firstName, string? lastName, string? country, string? city, int? age, int userModelId)
+    public UserProfileModel(int id, string? firstName, string? lastName, string? country, string? city, int? age, string userLoginKey)
     {
         FirstName = firstName;
         LastName = lastName;
         Country = country;
         City = city;
         Age = age;
-        UserModelId = userModelId;
+        UserLoginKey = userLoginKey;
         Id = id;
     }
     public UserProfileModel SetValues(UserProfileModel userProfile)

@@ -2,8 +2,8 @@
 
 namespace Domain.Models.UserModels
 {
-    public partial interface IUserSettingsRepository : IRepository<UserSettingModel>
+    public partial interface IUserSettingsRepository : IRepository<UserSettingModel, string>
     {
-        UserSettingModel? GetSettingsByUserId(int idUser);
+        UserSettingModel? GetSettingsByUserId(string idUser);
     }
 }

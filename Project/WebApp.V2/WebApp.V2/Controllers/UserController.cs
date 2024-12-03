@@ -22,13 +22,13 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<UserDtoApp> GetAccountForm()
+    public ActionResult<UserDtoApp> AccountForm()
     {
         return Ok(new UserDtoApp ());
     }
 
     [HttpGet("{login:maxlength(20)}")]
-    public ActionResult<UserDtoApp> GetUser([FromQuery] string login)
+    public ActionResult<UserDtoApp> UserAccept([FromQuery] string login)
     {
         var userLogic = _userAdapter.GetUser(login);
         var userApp = _mapper.Map<UserDtoApp>(userLogic);
@@ -36,7 +36,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("all")]
-    public ActionResult<IReadOnlyCollection<UserDtoApp>> GetUsers()
+    public ActionResult<IReadOnlyCollection<UserDtoApp>> Users()
     {
         var us = _userAdapter.GetUsers();
         var ms = _mapper.Map<IReadOnlyCollection<UserDtoApp>>(us);
@@ -44,19 +44,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<UserDtoApp> AddUser(UserDtoApp userDtoApp)
+    public ActionResult<UserDtoApp> AddUser(UserDtoApp userDtoApp, UserProfileDtoApp userProfileDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-       var res =  _userAdapter.CreateUser(userLogic);
-        return Ok(userDtoApp);
-    }
-    [HttpPost]
-    public ActionResult<UserDtoApp> AddUser(UserDtoApp userDtoApp, UserProfileDtoApp userProfileDtoApp, UserSettingDtoApp userSettingDtoApp)
-    {
-        var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-        var profLogic = _mapper.Map<UserDtoLogic>(userProfileDtoApp);
-        var settLogic = _mapper.Map<UserSettingDtoLogic>(userSettingDtoApp);
-        _userAdapter.CreateUser(userLogic, profLogic, settLogic);
+        var profLogic = _mapper.Map<UserProfileDtoLogic >(userProfileDtoApp);
+        var settLogic = _mapper.Map<UserSettingDtoLogic>(new UserSettingDtoLogic());
+        _userAdapter.CreateUser(userLogic, profLogic);
         return Ok(userDtoApp);
     }
 
@@ -69,7 +62,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("profile/{login}")]
-    public ActionResult<UserProfileDtoApp?> GetProfile([FromQuery] string login)
+    public ActionResult<UserProfileDtoApp?> Profile([FromQuery] string login)
     {
         var profileLogic = _userAdapter.GetProfile(login);
         var profileApp = _mapper.Map<UserProfileDtoApp>(profileLogic);

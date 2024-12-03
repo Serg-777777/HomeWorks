@@ -21,26 +21,24 @@ namespace Infrastructure.Repositories.UserRepos
             throw new NotImplementedException();
         }
 
-        public UserProfileModel GetEntity(int id)
+        public UserProfileModel? GetEntity(string entityID)
         {
             throw new NotImplementedException();
         }
 
-        public UserSettingModel? GetSettingsByUserId(int idUser)
+        public UserSettingModel? GetSettingsByUserId(string idUser)
         {
             throw new NotImplementedException();
         }
 
-        public bool RemoveEntity(int entityID)
+        public bool RemoveEntity(string entityID)
         {
             throw new NotImplementedException();
         }
 
-        public UserProfileModel UpdateEntity(UserProfileModel entity)
+        public UserProfileModel UpdateEntity(string entityID, UserProfileModel entity)
         {
             throw new NotImplementedException();
         }
-
-
     }
 }

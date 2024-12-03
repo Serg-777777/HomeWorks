@@ -10,15 +10,15 @@ namespace Domain.Models.UserModels;
         public bool IsDownLoadFiles { get; private set; } = true; //скачивание файлов с сервера
         public bool IsPlacePost { get; private set; } = true; // постить пост
         public bool IsReadPost { get; private set; } = true; // читать пост
-        public int UserModelId { get; private set; }
+        public string UserLoginKey { get; private set; }
 
-    public UserSettingModel(int id, bool isLoadFiles, bool isDownLoadFiles, bool isPlaceText, bool isReadText, int userModelId)
+    public UserSettingModel(int id, bool isLoadFiles, bool isDownLoadFiles, bool isPlaceText, bool isReadText, string userLoginKey)
     {
         IsLoadFiles = isLoadFiles;
         IsDownLoadFiles = isDownLoadFiles;
         IsPlacePost = isPlaceText;
         IsReadPost = isReadText;
-        UserModelId = userModelId;
+        UserLoginKey = userLoginKey;
         Id = id;
     }
 

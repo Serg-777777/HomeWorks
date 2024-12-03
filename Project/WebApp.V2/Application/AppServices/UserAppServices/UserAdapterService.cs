@@ -31,25 +31,16 @@ public class UserAdapterService
         var userLogic = _mapper.Map<UserDtoLogic>(user);
         return userLogic;
     }
-    public bool CreateUser(UserDtoLogic userDtoLogic)
-    {
-        var userModel = _mapper.Map<UserModel>(userDtoLogic);
-        userModel
-            .SetDateCreated(DateTime.Now)
-            .CreateRole(new UserRoleModel() { RoleUser = "пользователь" });
-        var res = _userRepository.AddEntity(userModel);
-        return res;
-    }
-    public bool CreateUser(UserDtoLogic userDtoLogic, UserDtoLogic userProfileLogic, UserSettingDtoLogic userSettingLogic)
+    public bool CreateUser(UserDtoLogic userDtoLogic, UserProfileDtoLogic userProfileLogic)
     {
         var user = _mapper.Map<UserModel>(userDtoLogic);
-        var profile = _mapper.Map<UserProfileModel>(userDtoLogic);
-        var setting = _mapper.Map<UserSettingModel>(userDtoLogic);
-        var role = new UserRoleModel() { RoleUser = "польхователь" };
+        var role = new UserRoleModel() { RoleUser = "пользователь" };
+
+        var profile = _mapper.Map<UserProfileModel>(userProfileLogic);
+        var setting = _mapper.Map<UserSettingModel>(new UserSettingDtoLogic());
 
         user
             .CreateProfile(profile)
-            .CreateSettings(setting)
             .CreateRole(role)
             .SetDateCreated(DateTime.Now);
         _userRepository.AddEntity(user);
@@ -60,13 +51,13 @@ public class UserAdapterService
     {
         var newProfile = _mapper.Map<UserProfileModel>(userProfileLogic);
         var user = _userRepository.GetEntity(login);
-        _userRepository.UpdateProfile(user!.Id, newProfile);
+        _userRepository.UpdateProfile(user!.Login, newProfile);
 
         return true;
     }
     public UserProfileDtoLogic?  GetProfile(string login)
     {
-        var userId = (int)_userRepository?.GetEntity(login)?.Id!;
+        var userId = _userRepository?.GetEntity(login)?.Login!;
         var prof = _userRepository?.GetProfile(userId!);
         var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
         return profLogic;

@@ -2,11 +2,11 @@
 
 namespace Domain.Models;
    
-public interface IRepository<TEntity> where TEntity : IEntity
+public interface IRepository<TEntity, TValueID> where TEntity : IEntity
 {
-    TEntity? GetEntity(int id);
+    TEntity? GetEntity(TValueID entityID);
     bool AddEntity(TEntity entity);
-    bool RemoveEntity(int entityID);
-    TEntity UpdateEntity(TEntity entity);
+    bool RemoveEntity(TValueID entityID);
+    TEntity UpdateEntity(TValueID entityID, TEntity entity);
     IReadOnlyCollection<TEntity> Entities { get; }
 }
