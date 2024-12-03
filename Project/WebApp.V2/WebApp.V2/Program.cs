@@ -12,7 +12,7 @@ app.MapControllers();
 
 app.MapControllerRoute(
     name: "users",
-    pattern: "User/{login}/{action}");
+    pattern: "User/{action}/{id}");
 
 app.MapGet("/", () => "Welcome!!! ");
 app.Run();

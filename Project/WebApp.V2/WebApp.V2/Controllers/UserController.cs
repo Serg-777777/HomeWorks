@@ -28,7 +28,7 @@ namespace Presentation.Views.UserController
             return View(userDtoApp);
         }
 
-        [HttpGet("{login}")]
+        [HttpGet]
         public ActionResult Details(string login)
         {
             var userLogic = _userAdapter.GetUser(login);
@@ -36,7 +36,7 @@ namespace Presentation.Views.UserController
             return View(userApp);
         }
 
-        [HttpGet("{login}/profile")]
+        [HttpGet]
         public ActionResult Profile(string login)
         {
             var prof = _userAdapter.GetProfile(login);
@@ -44,7 +44,7 @@ namespace Presentation.Views.UserController
             return View(profApp);
         }
 
-        [HttpGet("{login}/setting")]
+        [HttpGet]
         public ActionResult Setting(string login)
         {
             var sett = _userAdapter.GetSetting(login);
@@ -62,7 +62,7 @@ namespace Presentation.Views.UserController
             return RedirectToAction(nameof(Details), userLogic.Login);
         }
 
-        [HttpPut("{login}/edit")]
+        [HttpPut]
         public ActionResult EditUser(string login, UserDtoApp userDtoApp)
         {
             var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
@@ -70,7 +70,7 @@ namespace Presentation.Views.UserController
             return RedirectToAction(nameof(Details), userLogic.Login);
         }
 
-        [HttpPut("{login}/profile/edit")]
+        [HttpPut]
         public ActionResult EditProfile(string login, UserProfileDtoApp profileDtoApp)
         {
             var userLogic = _mapper.Map<UserProfileDtoLogic>(profileDtoApp);
@@ -78,7 +78,7 @@ namespace Presentation.Views.UserController
             return RedirectToAction(nameof(Profile), $"{login}/profile");
         }
 
-        [HttpPut("{login}/setting/edit")]
+        [HttpPut]
         public ActionResult EditeSetting(string login, UserSettingDtoApp settingDtoApp)
         {
             var settLogic = _mapper.Map<UserSettingDtoLogic>(settingDtoApp);
@@ -86,7 +86,7 @@ namespace Presentation.Views.UserController
             return RedirectToAction(nameof(Setting), $"{login}/setting");
         }
 
-        [HttpDelete("{login}/delete")]
+        [HttpDelete]
         public ActionResult Delete(string login)
         {
             var userLogic = new UserDtoLogic() { Login = login };

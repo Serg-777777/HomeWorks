@@ -86,6 +86,7 @@ public class UserMapperService
 
         return true;
     }
+
     public bool DeleteUser(UserDtoLogic userDtoLogic)
     {
         var res = _userRepository.RemoveEntity(userDtoLogic?.Login!);
