@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories.UserRepos
             _settings = userContext.UserSettings;
         }
 
-        public IReadOnlyCollection<UserSettingModel> Entities => _settings.ToList();
+        public IQueryable<UserSettingModel> Entities => _settings.AsQueryable();
 
         public bool AddEntity(UserSettingModel entity)
         {

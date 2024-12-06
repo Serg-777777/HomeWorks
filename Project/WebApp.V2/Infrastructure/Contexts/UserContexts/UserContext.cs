@@ -3,6 +3,7 @@
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts.Configs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 
 
@@ -23,12 +24,13 @@ public class UserContext: DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=UsersDatabase.db");
+        optionsBuilder.LogTo(Console.WriteLine,LogLevel.Information);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-        modelBuilder.ApplyConfiguration(new UserContextConfig());
+        modelBuilder.Entity<UserModel>().UseTpcMappingStrategy();
+        modelBuilder.ApplyConfiguration(new UserConfig());
         modelBuilder.ApplyConfiguration(new UserProfileConfig());
         modelBuilder.ApplyConfiguration(new UserSettingsConfig());
     }

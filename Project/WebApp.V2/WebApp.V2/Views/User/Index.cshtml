@@ -1,0 +1,57 @@
+﻿@using Presentation.Mappers.DtoApps.UserDtoApps;
+
+@model UserDtoApp
+
+@{
+    Layout = "_Master";
+    var prof = ViewData["prof"] as UserProfileDtoApp;
+}
+<style>
+    table tr td{
+        color:darkblue;
+    }
+</style>
+<form method="post">
+    <table>
+        <tr>
+            <td width="100px"><label>Логин:</label></td>
+            <td><input name="Login" type="text" maxlength="20" /></td>
+        </tr>
+        <tr>
+            <td><label>Пароль:</label></td>
+            <td><input name="Password" type="password" /></td>
+        </tr>
+        <tr>
+            <td><label>Email:</label> </td>
+            <td> <input name="Email" type="email" /></td>
+        </tr>
+    </table>
+
+    <hr style="color:darkblue" />
+
+    <table>
+        <tr>
+            <td><label>Имя:</label></td>
+            <td><input name="FirstName" type="text" /></td>
+        </tr>
+        <tr>
+            <td><label>Фамилия:</label> </td>
+            <td> <input name="LastName" type="text" /><br /></td>
+        </tr>
+        <tr>
+            <td><label>Возвраст:</label></td>
+            <td><input name="Age" type="number" maxlength="2" /></td>
+        </tr>
+        <tr>
+            <td><label>Город:</label></td>
+            <td><input name="City" type="text" /><br /></td>
+        </tr>
+        <tr>
+            <td><label>Страна:</label></td>
+            <td><input name="Country" type="text" /></td>
+        </tr>
+    </table>
+
+
+    <button type="submit" formaction="user/add">Отправить</button>
+</form>

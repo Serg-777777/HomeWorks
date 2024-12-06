@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories.UserRepos
             _profiles = userContext.UserProfiles;
         }
 
-        public IReadOnlyCollection<UserProfileModel> Entities => _profiles.ToList();
+        public IQueryable<UserProfileModel> Entities => _profiles.AsQueryable();
 
         public bool AddEntity(UserProfileModel entity)
         {

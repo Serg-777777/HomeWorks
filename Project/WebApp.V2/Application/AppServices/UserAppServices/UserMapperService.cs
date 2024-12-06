@@ -10,86 +10,90 @@ namespace Application.ServicesApps.UserServicesApps;
 
 public class UserMapperService
 {
-    UserRepository _userRepository;
+    IUserRepository _userRepository;
     IMapper _mapper;
     ILogger<UserMapperService> _logger;
-    public UserMapperService(UserRepository userRepository, IMapper mapper, ILogger<UserMapperService> logger)
+    public UserMapperService(IUserRepository userRepository, IMapper mapper, ILogger<UserMapperService> logger)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _logger = logger;
     }
 
-    public IReadOnlyCollection<UserDtoLogic> GetUsers()
+    public ICollection<UserDtoLogic> GetUsers()
     {
-        var users = _userRepository.Entities.AsQueryable();
-        var usersLogics = _mapper.Map<IReadOnlyCollection<UserDtoLogic>>(users);
+        var users = _userRepository.Entities;
+        var usersLogics = _mapper.Map<ICollection<UserDtoLogic>>(users);
         return usersLogics;
     }
-    public UserDtoLogic GetUser(string login)
-    {
-        var user = _userRepository.GetEntity(login);
-        var userLogic = _mapper.Map<UserDtoLogic>(user);
-        return userLogic;
-    }
-    public UserProfileDtoLogic? GetProfile(string login)
-    {
-        var prof = _userRepository?.GetProfile(login);
-        var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
-        return profLogic;
-
-        //var userProfile = _userRepository?.GetEntity(login)?.UserProfile;
-        //return userProfile;
-    }
-    public UserSettingDtoLogic GetSetting(string login)
-    {
-        var sett = _userRepository.GetSetting(login);
-        var settLogic = _mapper.Map<UserSettingDtoLogic>(sett);
-        return settLogic;
-    }
-
     public bool CreateUser(UserDtoLogic userDtoLogic, UserProfileDtoLogic userProfileLogic)
     {
         var user = _mapper.Map<UserModel>(userDtoLogic);
         var role = new UserRoleModel() { RoleUser = "пользователь" };
+        var profile = _mapper.Map<UserProfileModel>(userProfileLogic).SetUserProperty(user); // устанавливет внешний ключ
+        var setting = _mapper.Map<UserSettingModel>(new UserSettingDtoLogic()).SetUserProperty(user); // устанавливет внешний ключ
 
-        var profile = _mapper.Map<UserProfileModel>(userProfileLogic);
-        var setting = _mapper.Map<UserSettingModel>(new UserSettingDtoLogic());
-
-        user
-            .CreateProfile(profile)
-            .CreateRole(role)
+        user?
+            .SetProfile(profile)
+            .SetSettings(setting!)
+            .SetRole(role)
             .SetDateCreated(DateTime.Now);
-        _userRepository.AddEntity(user);
 
+        _logger.LogInformation($":::TEST MAPPER ADD::: Login:{user?.Login}, Name:{profile.FirstName} Date: {setting?.UserModel?.DateCreated}");
+
+        _userRepository.AddEntity(user!);
         return true;
     }
 
-    public bool UpdateUser(string login, UserDtoLogic userDtoLogic)
+    public UserDtoLogic GetUser(int userId)
+    {
+        var user = _userRepository.GetEntity(userId);
+        var userLogic = _mapper.Map<UserDtoLogic>(user);
+        return userLogic;
+    }
+    public UserProfileDtoLogic? GetProfile(int userId)
+    {
+        var prof = _userRepository?.GetProfile(userId);
+        var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
+        return profLogic;
+
+    }
+    public UserSettingDtoLogic GetSetting(int userId)
+    {
+        var sett = _userRepository.GetSetting(userId);
+        var settLogic = _mapper.Map<UserSettingDtoLogic>(sett);
+        return settLogic;
+    }
+    public UserProfileDtoLogic GetProfile(string loginUser)
+    {
+        var profile = _userRepository.GetProfile(loginUser);
+        var profileLogic = _mapper.Map<UserProfileDtoLogic>(profile);
+        return profileLogic;
+    }
+    public bool UpdateUser(int userId, UserDtoLogic userDtoLogic)
     {
         var user = _mapper.Map<UserModel>(userDtoLogic);
-        _userRepository.UpdateEntity(login, user);
+        _userRepository.UpdateEntity(userId, user);
         return true;
     }
-    public bool UpdateProfile(string login, UserProfileDtoLogic userProfileLogic)
+    public bool UpdateProfile(int userId, UserProfileDtoLogic userProfileLogic)
     {
         var newProfile = _mapper.Map<UserProfileModel>(userProfileLogic);
-        var user = _userRepository.GetEntity(login);
-        _userRepository.UpdateProfile(user!.Login, newProfile);
+        var user = _userRepository.GetEntity(userId);
+        _userRepository.UpdateProfile(user!.Id, newProfile);
 
         return true;
     }
-    public bool UpdateSetting(string login, UserSettingDtoLogic settingDtoLogic)
+    public bool UpdateSetting(int userId, UserSettingDtoLogic settingDtoLogic)
     {
         var newSett = _mapper.Map<UserSettingModel>(settingDtoLogic);
-        _userRepository.UpdateSetting(login, newSett);
+        _userRepository.UpdateSetting(userId, newSett);
 
         return true;
     }
-
-    public bool DeleteUser(UserDtoLogic userDtoLogic)
+    public bool DeleteUser(int userId)
     {
-        var res = _userRepository.RemoveEntity(userDtoLogic?.Login!);
+        var res = _userRepository.RemoveEntity(userId);
         return res;
     }
 

@@ -1,8 +1,6 @@
-﻿
+﻿namespace Presentation.Mappers.DtoApps.UserDtoApps;
 
-namespace Application.DtoApps.UserDtoApps;
-
-public class UserSettingDtoApp:IUserDtoApp
+public class UserSettingDtoApp : IUserDtoApp
 {
     public bool? IsLoadFiles { get; set; }
     public bool? IsDownLoadFiles { get; set; }

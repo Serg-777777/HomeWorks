@@ -4,10 +4,11 @@ using Domain.Models.UserModels;
 
 namespace Infrastructure.Repositories.UserRepos;
 
-public interface IUserRepository : IRepository<UserModel, string>
+public interface IUserRepository : IRepository<UserModel, int>
 {
-    UserProfileModel? GetProfile(string login);
-    UserSettingModel? GetSetting(string login);
-    UserProfileModel? UpdateProfile(string userLogin, UserProfileModel userProfile);
-    UserSettingModel? UpdateSetting(string userLogin, UserSettingModel userSetting);
+    UserProfileModel? GetProfile(int id);
+    UserProfileModel? GetProfile(string loginUser);
+    UserSettingModel? GetSetting(int id);
+    UserProfileModel? UpdateProfile(int id, UserProfileModel userProfile);
+    UserSettingModel? UpdateSetting(int id, UserSettingModel userSetting);
 }

@@ -9,7 +9,6 @@ namespace Infrastructure.Contexts.UserContexts.Configs
     {
         public void Configure(EntityTypeBuilder<UserSettingModel> builder)
         {
-            builder.ToTable(UserSettingModel.TableName);
 
         }
     }

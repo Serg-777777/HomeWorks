@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="@ViewBag.Title" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div style="height:50px; background-color: brown"></div>
+    <div>
+        <table height="300px">
+            <tr>
+                <td width="100px">
+                    <div>
+                        <strong>USERS</strong><br />
+                        <a href="/user">Форма</a>
+                    </div>
+                </td>
+                <td>@RenderBody()</td>
+            </tr>
+        </table>
+
+    </div>
+    <br />
+    <br />
+    <div style="height:stretch; background-color:cadetblue"></div>
+</body>
+</html>
