@@ -23,6 +23,12 @@ sealed public class UserRepository : IUserRepository
         //   using (var trans = _userContext.Database.BeginTransaction())
         //  {
         var u = _userContext.Users.Add(entity);
+        //устанавливает ключи
+        u.Entity.UserProfile!.SetUserProperty(u.Entity);
+        u.Entity.UserSetting!.SetUserProperty(u.Entity);
+        u.Entity.UserProfile!.UserModelId = (int)u.Entity?.Id!;
+        u.Entity.UserSetting!.UserModelId = (int)u.Entity?.Id!;
+
         _userContext.UserProfiles.Add(u.Entity?.UserProfile!);
         _userContext.UserSettings.Add(u.Entity?.UserSetting!);
         _userContext.SaveChanges();

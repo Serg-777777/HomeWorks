@@ -30,8 +30,8 @@ public class UserMapperService
     {
         var user = _mapper.Map<UserModel>(userDtoLogic);
         var role = new UserRoleModel() { RoleUser = "пользователь" };
-        var profile = _mapper.Map<UserProfileModel>(userProfileLogic).SetUserProperty(user); // устанавливет внешний ключ
-        var setting = _mapper.Map<UserSettingModel>(new UserSettingDtoLogic()).SetUserProperty(user); // устанавливет внешний ключ
+        var profile = _mapper.Map<UserProfileModel>(userProfileLogic); 
+        var setting = _mapper.Map<UserSettingModel>(new UserSettingDtoLogic()); 
 
         user?
             .SetProfile(profile)
