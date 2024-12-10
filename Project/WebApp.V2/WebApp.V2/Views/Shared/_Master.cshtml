@@ -2,6 +2,15 @@
     Layout = null;
 }
 
+<style type="text/css">
+    .borderColor {
+        border-right-color: red;
+        border-right-style: solid;
+        border-right-width: 1px;
+        margin-right:5px;
+    }
+</style>
+
 <!DOCTYPE html>
 
 <html>
@@ -9,13 +18,15 @@
     <meta name="@ViewBag.Title" content="width=device-width" />
     <title>@ViewBag.Title</title>
 </head>
+
 <body>
     <div style="height:50px; background-color: brown"></div>
     <div>
+        <br />
         <table height="200px">
             <tr>
                 <td width="100px">
-                    <div>
+                    <div class="borderColor">
                         <strong>USERS</strong><br />
                         <a href="/user">Форма</a>
                     </div>
@@ -27,6 +38,6 @@
     </div>
     <br />
     <br />
-    <div style="height:100; background-color:cadetblue"></div>
+    <div style="height:25px; background-color:cadetblue"></div>
 </body>
 </html>

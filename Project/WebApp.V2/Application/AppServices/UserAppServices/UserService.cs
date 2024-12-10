@@ -8,7 +8,7 @@ using Infrastructure.DtoLogics.UserDtoLogics;
 using Infrastructure.Repositories.UserRepos;
 using Microsoft.Extensions.Logging;
 
-namespace Application.ServicesApps.UserServicesApps;
+namespace Application.ServicesViews.UserServicesApps;
 
 public class UserService
 {

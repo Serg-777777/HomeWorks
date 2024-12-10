@@ -1,17 +1,11 @@
-using Application.ServicesApps.Mappers.UserMappers;
-using Application.ServicesApps.UserServicesApps;
-using Infrastructure.Contexts.UserContexts;
-using Infrastructure.Repositories.UserRepos;
+using Application.ServicesViews.Mappers.UserMappers;
+using Presentation.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddDbContext<UserContext>();
-
+builder.Services.AddUsersServices(builder.Configuration); 
 builder.Services.AddAutoMapper(typeof(UserMapperProfile));
 builder.Services.AddLogging(p => p.AddConsole());
 

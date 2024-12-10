@@ -2,7 +2,7 @@
 @model UserIdDtoView
 
 @{
-
+    Layout = "_Master";
 }
 <style type="text/css">
     table tr td {
@@ -13,21 +13,21 @@
     }
 </style>
 
-<h2><strong>Пользователь</strong></h2>
-
+<h3><strong>User</strong></h3>
+<hr class="colorSet" />
 <table>
     <tr>
-        <td>Id:</td>
+        <td><strong>Id:</strong></td>
         <td>@Model.Id</td>
     </tr>
     <tr>
-        <td>Логин: </td>
+        <td><strong>Логин: </strong></td>
         <td>@Model.Login</td>
     </tr>
     <tr>
-        <td>Мэйл:</td>
+        <td><strong>Мэйл:</strong></td>
         <td>@Model.Email</td>
     </tr>
 </table>
 
-<hr class="colorSet" />
+

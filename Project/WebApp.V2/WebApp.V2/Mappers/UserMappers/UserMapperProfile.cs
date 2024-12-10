@@ -6,7 +6,7 @@ using Presentation.Mappers.DtoApps.UserDtoViews;
 using Presentation.Mappers.DtoViews.UserDtoViews;
 
 
-namespace Application.ServicesApps.Mappers.UserMappers;
+namespace Application.ServicesViews.Mappers.UserMappers;
 
 public class UserMapperProfile : Profile
 {
