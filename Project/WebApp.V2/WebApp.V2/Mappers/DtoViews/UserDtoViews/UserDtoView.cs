@@ -1,6 +1,6 @@
-﻿namespace Presentation.Mappers.DtoApps.UserDtoApps;
+﻿namespace Presentation.Mappers.DtoApps.UserDtoViews;
 
-public class UserDtoApp : IUserDtoApp
+public class UserDtoView : IUserDtoView
 {
     public string? Login { get; set; }
     public string? Password { get; set; }

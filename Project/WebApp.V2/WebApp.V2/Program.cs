@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<UserMapperService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddDbContext<UserContext>();
 
 builder.Services.AddAutoMapper(typeof(UserMapperProfile));

@@ -1,16 +1,33 @@
-﻿@using Presentation.Mappers.DtoApps.UserDtoApps
-@model UserDtoApp
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+@model UserIdDtoView
 
 @{
 
 }
 <style type="text/css">
-    .colorSet {
+    table tr td {
+        color: darkblue;
+    }
+    h2 {
         color: darkblue;
     }
 </style>
 
-<h2 class="colorSet"><strong>Пользователь</strong></h2>
-<div><label>Логин: </label><span>@Model.Login</span></div>
-<div><label>Email: </label><span>@Model.Email</span></div>
+<h2><strong>Пользователь</strong></h2>
+
+<table>
+    <tr>
+        <td>Id:</td>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <td>Логин: </td>
+        <td>@Model.Login</td>
+    </tr>
+    <tr>
+        <td>Мэйл:</td>
+        <td>@Model.Email</td>
+    </tr>
+</table>
+
 <hr class="colorSet" />

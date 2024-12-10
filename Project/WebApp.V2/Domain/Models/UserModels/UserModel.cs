@@ -4,7 +4,6 @@ namespace Domain.Models.UserModels;
 
  public class UserModel : IEntity
 {
-    public const string TableName = "Users";
 
     public int Id { get; set; }
     public DateTime DateCreated { get; private set; }
@@ -12,42 +11,27 @@ namespace Domain.Models.UserModels;
     public string? Login { get; private set; }
     public string? Password { get; private set; }
     public string? Email { get; private set; }
-
-    public UserProfileModel? UserProfile { get;  set; }
-    public UserSettingModel? UserSetting { get; set; } 
-    public UserRoleModel? UserRole { get; set; }
+    public UserRoleModel? Role { get; private set; }
 
     protected UserModel() { }
-    public UserModel(string login, string password, string email)
+    public UserModel(string login, string password, string email, DateTime dateTime, UserRoleModel role)
     {
         Login = login ?? throw new ArgumentNullException(nameof(login));
         Password = password ?? throw new ArgumentNullException(nameof(password));
         Email = email ?? throw new ArgumentNullException(nameof(email));
-        this.SetDateCreated(DateTime.Now);
+        DateCreated = dateTime;
+        Role = role ?? throw new ArgumentNullException(nameof(email)); ;
     }
-
-   public UserModel SetLogin(string login)
+    public UserModel SetValues(UserModel entity)
     {
-        this.Login = login;
+       //Login = entity.Login;
+        Email = entity.Email;
+        Password = entity.Password;
         return this;
     }
-    public UserModel SetPassword(string password)
+    public UserModel SetRole(UserRoleModel userRole)
     {
-        this.Password = password;
-        return this;
-    }
-    public UserModel SetEmail(string mail)
-    {
-        this.Email = mail;
-        return this;
-    }
-    public bool Equals(UserModel? other)
-    {
-        return (this.Id == other?.Id || this.Login == other?.Login);
-    }
-    public UserModel SetDelete(bool val)
-    {
-        this.IsDeleted = val;
+        Role = userRole;
         return this;
     }
     public UserModel SetDateCreated(DateTime dateTime)
@@ -55,20 +39,14 @@ namespace Domain.Models.UserModels;
         this.DateCreated = dateTime;
         return this;
     }
-    public UserModel SetSettings(UserSettingModel userSetting)
+    public UserModel SetIsDelete(bool val)
     {
-        this.UserSetting = userSetting;
+        this.IsDeleted = val;
         return this;
     }
-    public UserModel SetProfile(UserProfileModel userProfile)
+    public bool Equals(UserModel? other)
     {
-        this.UserProfile = userProfile;
-        return this;
+        return (this.Id == other?.Id);
     }
-    public UserModel SetRole(UserRoleModel roleModel)
-    {
-        this.UserRole = roleModel;
-        return this;
-    }
-
+  
 }

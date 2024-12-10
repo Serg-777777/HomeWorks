@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
-    sealed public class UserProfileRepository : IUserProfileRepository
+    sealed public class UserProfileRepository
     {
-        DbSet<UserProfileModel> _profiles;
+        DbSet<UserProfileModel> _profiles=default!;
         public UserProfileRepository(UserContext userContext)
         {
-            _profiles = userContext.UserProfiles;
         }
 
         public IQueryable<UserProfileModel> Entities => _profiles.AsQueryable();

@@ -12,8 +12,6 @@ namespace Infrastructure.Contexts.UserContexts;
 public class UserContext: DbContext
 {
    public DbSet<UserModel> Users { get; set; } = null!;
-    public DbSet<UserProfileModel> UserProfiles { get; set; } = null!;
-    public DbSet<UserSettingModel> UserSettings { get; set; } = null!;
 
     public UserContext()
     {
@@ -24,14 +22,11 @@ public class UserContext: DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=UsersDatabase.db");
-        optionsBuilder.LogTo(Console.WriteLine,LogLevel.Information);
+        optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<UserModel>().UseTpcMappingStrategy();
         modelBuilder.ApplyConfiguration(new UserConfig());
-        modelBuilder.ApplyConfiguration(new UserProfileConfig());
-        modelBuilder.ApplyConfiguration(new UserSettingsConfig());
     }
 }

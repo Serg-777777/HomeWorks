@@ -2,98 +2,64 @@
 using AutoMapper;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Mappers.DtoApps.UserDtoApps;
+using Presentation.Mappers.DtoApps.UserDtoViews;
+using Presentation.Mappers.DtoViews.UserDtoViews;
 
 namespace Presentation.Controllers;
 
 public class UserController : Controller
 {
     private readonly ILogger<UserController> _logger;
-    private UserMapperService _userMapper;
+    private UserService _userService;
     private IMapper _mapper;
-    public UserController(UserMapperService userAdapter, IMapper mapper, ILogger<UserController> logger)
+    public UserController(UserService userService, IMapper mapper, ILogger<UserController> logger)
     {
         _logger = logger;
-        _userMapper = userAdapter;
+        _userService = userService;
         _mapper = mapper;
     }
 
     public ActionResult Index()
     {
-        var userDtoApp = new UserDtoApp();
-        ViewData["prof"] = new UserProfileDtoApp();
+        var userDtoApp = new UserDtoView();
         ViewBag.Title = "Форма";
         return View(userDtoApp);
     }
 
     [HttpPost]
-    public ActionResult Add(UserDtoApp userDtoApp, UserProfileDtoApp profileDtoApp)
+    public ActionResult Add(UserDtoView userDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-        var profLogic = _mapper.Map<UserProfileDtoLogic>(profileDtoApp);
-
-        _logger.LogInformation($":::TEST CONTROL ADD::: Login:{userLogic?.Login}, Name:{profLogic?.FirstName}"); 
-
-        _userMapper.CreateUser(userLogic!, profLogic!);
-        var str = userLogic?.Login;
-        return LocalRedirect($"~/user/details/{str}");
-    }
-    
-    [HttpGet]
-    public ActionResult Details([FromRoute] string login) // не получает значение
-    {
-        //login = "mylogin"; //test
-        var userLogic = _userMapper.GetUsers().SingleOrDefault(u=>u.Login==login); // ошибка не найден
-        if (userLogic == null) return BadRequest($"!!! пользователь '{login}' не найден !!!");
-        var userApp = _mapper.Map<UserDtoApp>(userLogic);
-       
-        return View(userApp);
+        var userNewModel = _userService.CreateUser(userLogic);
+        _logger.LogInformation($":::TEST ADD::: Login:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email}");
+        var id = userNewModel?.Id;
+        return LocalRedirect($"~/user/details/{id}");
     }
 
     [HttpGet]
-    public ActionResult Profile([FromRoute] int userID)
+    public ActionResult Details([FromRoute] int id)
     {
-        var prof = _userMapper.GetProfile(userID);
-        var profApp = _mapper.Map<UserProfileDtoApp>(prof);
-        return View(profApp);
+        _logger.LogInformation($":::TEST ADD::: ID:{id}");
+        var userLogic = _userService.GetUser(id);
+        if(userLogic != null)
+        {
+            var userView = _mapper.Map<UserIdDtoView>(userLogic);
+            return View(userView);
+        }
+        return BadRequest($"Не найден ID: {id}");
     }
-
-    [HttpGet]
-    public ActionResult Setting([FromRoute] int userID)
-    {
-        var sett = _userMapper.GetSetting(userID);
-        var settApp = _mapper.Map<UserSettingDtoApp>(sett);
-        return View(settApp);
-    }
-
     [HttpPut]
-    public ActionResult Edit([FromRoute] int userID, UserDtoApp userDtoApp)
+    public ActionResult Edit([FromRoute] int id, [FromBody] UserDtoView userDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-        _userMapper.UpdateUser(userID, userLogic);
-        return RedirectToAction(nameof(Details), userID);
-    }
-
-    [HttpPut]
-    public ActionResult EditProfile([FromRoute] int userID, UserProfileDtoApp profileDtoApp)
-    {
-        var userLogic = _mapper.Map<UserProfileDtoLogic>(profileDtoApp);
-        _userMapper.UpdateProfile(userID, userLogic);
-        return RedirectToAction(nameof(Profile), userID);
-    }
-
-    [HttpPut]
-    public ActionResult EditSetting([FromRoute] int userID, UserSettingDtoApp settingDtoApp)
-    {
-        var settLogic = _mapper.Map<UserSettingDtoLogic>(settingDtoApp);
-        _userMapper.UpdateSetting(userID, settLogic);
-        return RedirectToAction(nameof(Setting), userID);
+        var user = _userService.UpdateUser(id, userLogic);
+        return RedirectToAction(nameof(Details), user.Id);
     }
 
     [HttpDelete]
-    public ActionResult Delete([FromRoute] int userID)
+    public ActionResult Delete([FromRoute] int id)
     {
-        var res = _userMapper.DeleteUser(userID);
+        var res = _userService.DeleteUser(id);
         return RedirectToAction(nameof(Index));
     }
 

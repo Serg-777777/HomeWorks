@@ -1,10 +1,9 @@
-﻿@using Presentation.Mappers.DtoApps.UserDtoApps;
+﻿@using Presentation.Mappers.DtoApps.UserDtoViews;
 
-@model UserDtoApp
+@model UserDtoView
 
 @{
     Layout = "_Master";
-    var prof = ViewData["prof"] as UserProfileDtoApp;
 }
 <style>
     table tr td{
@@ -31,32 +30,6 @@
             <td> <input name="Email" type="email" /></td>
         </tr>
     </table>
-
-    <hr style="color:darkblue" />
-    <h3 class="myStyle">Профиль</h3>
-    <table>
-        <tr>
-            <td><label>Имя:</label></td>
-            <td><input name="FirstName" type="text" /></td>
-        </tr>
-        <tr>
-            <td><label>Фамилия:</label> </td>
-            <td> <input name="LastName" type="text" /><br /></td>
-        </tr>
-        <tr>
-            <td><label>Возвраст:</label></td>
-            <td><input name="Age" type="number" maxlength="2" /></td>
-        </tr>
-        <tr>
-            <td><label>Город:</label></td>
-            <td><input name="City" type="text" /><br /></td>
-        </tr>
-        <tr>
-            <td><label>Страна:</label></td>
-            <td><input name="Country" type="text" /></td>
-        </tr>
-    </table>
-
 
     <button type="submit" formaction="user/add">Отправить</button>
 </form>

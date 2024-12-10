@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
-    sealed public class UserSettingRepository : IUserSettingsRepository
+    sealed public class UserSettingRepository
     {
-        DbSet<UserSettingModel> _settings;
+        DbSet<UserSettingModel> _settings=default!;
         public UserSettingRepository(UserContext userContext)
         {
-            _settings = userContext.UserSettings;
         }
 
         public IQueryable<UserSettingModel> Entities => _settings.AsQueryable();
