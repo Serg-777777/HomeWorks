@@ -30,15 +30,9 @@
                 <td><input disabled border="0" type="text" asp-for="@u.DateCreated" name="DateCreated" value="@u.DateCreated" /></td>
                 <td><input border="0" type="text" asp-for="@u.Email" name="Email" value="@u.Email" /></td>
 
-<<<<<<< HEAD
-                <td><button type="submit" formmethod="post" action="/user/delete/@u.Id">исключить</button></td>
-                <td><button type="submit" formmethod="post" action="/user/edit/@u.Id">обновить</button></td>
-                <td><button type="submit" formmethod="post" action="/user/eraseuser/@u.Id">удалить</button></td>
-=======
                 <td><a href="/user/delete/@u.Id">исключить</a></td>
                 <td><a href="/user/edit/@u.Id">обновить</a></td>
                 <td><a href="/user/eraseuser/@u.Id">удалить</a></td>
->>>>>>> 44f2108 (otus)
             </tr>
         }
     </table>
