@@ -1,7 +1,6 @@
 ﻿
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories.UserRepos;
@@ -16,7 +15,7 @@ sealed public class UserRepository : IUserRepository
         _logger = logger;
     }
 
-    public IQueryable<UserModel> Entities => _userContext.Users.AsNoTracking().Where(p => p.IsDeleted == false).AsQueryable();
+    public List<UserModel> Entities => _userContext.Users.ToList();
 
     public UserModel? AddEntity(UserModel entity)
     {
@@ -60,5 +59,20 @@ sealed public class UserRepository : IUserRepository
     {
         var user = _userContext.Users.FirstOrDefault(u => u.Id == idUser);
         return user;
+    }
+
+    public bool UpdateEntityRange(IEnumerable<UserModel> userModels)
+    {
+        _userContext.Users.UpdateRange(userModels);
+        _userContext.SaveChanges();
+        return true;
+    }
+
+    public bool EraseEntity(int idUser)
+    {
+        var u = _UserById(idUser);
+        _userContext.Users.Remove(u!);
+        _userContext.SaveChanges();
+        return true;
     }
 }

@@ -1,0 +1,11 @@
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+@model IEnumerable<UserFullDtoView>
+
+@{
+    Layout = ViewBag.Layout;
+}
+
+<h2>Все пользователи</h2>
+<hr style=" background-color :blue" />
+
+@{ await Html.RenderPartialAsync("_UsersList", Model);}

@@ -1,0 +1,41 @@
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+@model IEnumerable<UserFullDtoView>
+<style type="text/css">
+    table {
+        font-family: Calibri,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: blue;
+    }
+</style>
+
+<br />
+<form>
+    <table>
+        <tr>
+            <th><span>выбор</span></th>
+            <th><span>ID</span></th>
+            <th><span>логин</span></th>
+            <th><span>дата</span></th>
+            <th><span>мэйл</span></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td><input border="0" type="checkbox" asp-for="@u.IsDeleted" name="IsDeleted" value="@u.IsDeleted" /></td>
+                <td><input border="0" type="text" asp-for="@u.Id" name="Id" value="@u.Id" /></td>
+                <td><input border="0" type="text" asp-for="@u.Login" name="Login" value="@u.Login" /></td>
+                <td><input border="0" type="text" asp-for="@u.DateCreated" name="DateCreated" value="@u.DateCreated" /></td>
+                <td><input border="0" type="text" asp-for="@u.Email" name="Email" value="@u.Email" /></td>
+
+                <td><button type="submit" formmethod="post" action="/user/delete/@u.Id">исключить</button></td>
+                <td><button type="submit" formmethod="post" action="/user/edit/@u.Id">обновить</button></td>
+                <td><button type="submit" formmethod="post" action="/user/eraseuser/@u.Id">исключить</button></td>
+            </tr>
+        }
+    </table>
+    <button type="submit" formmethod="post" action="/user/allupdate">выполнить</button>
+</form>
+<br>

@@ -1,4 +1,4 @@
-﻿namespace Presentation.Mappers.DtoApps.UserDtoViews;
+﻿namespace Presentation.Mappers.DtoViews.UserDtoViews;
 
 public interface IUserDtoView
 {

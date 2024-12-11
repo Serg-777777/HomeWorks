@@ -21,44 +21,43 @@ public class UserService
         _mapper = mapper;
         _logger = logger;
     }
-
-    public IReadOnlyCollection<UserDtoLogic> GetUsers()
+    public List<UserFullDtoLogic> GetUsers()
     {
         var users = _userRepository.Entities;
-        var usersLogics = _mapper.Map<IReadOnlyCollection<UserDtoLogic>>(users);
+        var usersLogics = _mapper.Map<List<UserFullDtoLogic>>(users);
         _logger.LogInformation($":::TEST ALL count: {usersLogics.Count}");
         return usersLogics;
     }
-    public UserIdDtoLogic? CreateUser(UserDtoLogic userDtoLogic)
+    public UserFullDtoLogic? CreateUser(UserDtoLogic userDtoLogic)
     {
         var userModel = _mapper.Map<UserModel>(userDtoLogic).SetDateCreated(DateTime.Now);
         var newUser = _userRepository.AddEntity(userModel);
         if (newUser != null)
         {
-            var newUserLogic = _mapper.Map<UserIdDtoLogic>(newUser);
+            var newUserLogic = _mapper.Map<UserFullDtoLogic>(newUser);
             return newUserLogic!;
         }
         return null;
     }
 
-    public UserIdDtoLogic? GetUser(int userId)
+    public UserDtoLogic? GetUser(int userId)
     {
         var user = _userRepository.GetEntity(userId);
         if (user != null)
         {
-            var userIdLogic = _mapper.Map<UserIdDtoLogic>(user);
+            var userIdLogic = _mapper.Map<UserDtoLogic>(user);
             return userIdLogic;
         }
         return null;
     }
 
-    public UserIdDtoLogic UpdateUser(int idUser, UserDtoLogic newUser)
+    public UserDtoLogic UpdateUser(int idUser, UserDtoLogic newUser)
     {
         var userModel = _mapper.Map<UserModel>(newUser);
         var user = _userRepository.UpdateEntity(idUser, userModel);
         if (user != null)
         {
-            var userLogic = _mapper.Map<UserIdDtoLogic>(user);
+            var userLogic = _mapper.Map<UserDtoLogic>(user);
             return userLogic;
         }
         return null!;
@@ -66,6 +65,19 @@ public class UserService
     public bool DeleteUser(int id)
     {
         var res = _userRepository.RemoveEntity(id);
+        return res;
+    }
+    
+    public bool UpdateUsers(IEnumerable<UserFullDtoLogic> userFullDtos)
+    {
+        var us = _mapper.Map<IEnumerable<UserModel>>(userFullDtos);
+        var res = _userRepository.UpdateEntityRange(us);
+        return res;
+    }
+
+    public bool EraseUser(int idUser)
+    {
+        var res = _userRepository.EraseEntity(idUser);
         return res;
     }
 }

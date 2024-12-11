@@ -2,7 +2,6 @@
 using AutoMapper;
 using Domain.Models.UserModels;
 using Infrastructure.DtoLogics.UserDtoLogics;
-using Presentation.Mappers.DtoApps.UserDtoViews;
 using Presentation.Mappers.DtoViews.UserDtoViews;
 
 
@@ -12,10 +11,14 @@ public class UserMapperProfile : Profile
 {
     public UserMapperProfile()
     {
+        base.AllowNullCollections=true;
+
         CreateMap<UserModel, UserDtoLogic>().ReverseMap();
         CreateMap<UserDtoLogic, UserDtoView>().ReverseMap();
-        CreateMap<UserModel, UserIdDtoLogic>().ReverseMap();
-        CreateMap<UserIdDtoLogic, UserIdDtoView>().ReverseMap();
+
+        CreateMap<UserModel, UserFullDtoLogic>().ReverseMap();
+        CreateMap<UserFullDtoLogic, UserFullDtoView>().ReverseMap();
+
 
     }
 }

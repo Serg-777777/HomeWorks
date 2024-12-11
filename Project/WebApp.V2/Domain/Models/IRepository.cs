@@ -8,5 +8,5 @@ public interface IRepository<TEntity, TValueID> where TEntity : IEntity
     TEntity? AddEntity(TEntity entity);
     bool RemoveEntity(TValueID entityID);
     TEntity? UpdateEntity(TValueID entityID, TEntity entity);
-    IQueryable<TEntity> Entities { get; }
+    List<TEntity> Entities { get; }
 }

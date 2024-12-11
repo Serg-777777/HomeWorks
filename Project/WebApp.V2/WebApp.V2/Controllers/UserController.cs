@@ -1,8 +1,8 @@
-﻿using Application.ServicesViews.UserServicesApps;
+﻿using Application.DtoLogics.UserDtoLogics;
+using Application.ServicesViews.UserServicesApps;
 using AutoMapper;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Mappers.DtoApps.UserDtoViews;
 using Presentation.Mappers.DtoViews.UserDtoViews;
 
 namespace Presentation.Controllers;
@@ -31,7 +31,7 @@ public class UserController : Controller
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
         var userNewModel = _userService.CreateUser(userLogic);
-        _logger.LogInformation($":::TEST ADD::: Login:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email}");
+        _logger.LogInformation($":::TEST ADD::: Id:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email}");
         var id = userNewModel?.Id;
         return LocalRedirect($"~/user/details/{id}");
     }
@@ -43,24 +43,50 @@ public class UserController : Controller
         var userLogic = _userService.GetUser(id);
         if(userLogic != null)
         {
-            var userView = _mapper.Map<UserIdDtoView>(userLogic);
+            var userView = _mapper.Map<UserDtoView>(userLogic);
+            ViewData["id"] = id;
             return View(userView);
         }
         return BadRequest($"Не найден ID: {id}");
     }
-    [HttpPut]
+    [HttpPost]
     public ActionResult Edit([FromRoute] int id, [FromBody] UserDtoView userDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
         var user = _userService.UpdateUser(id, userLogic);
-        return RedirectToAction(nameof(Details), user.Id);
+        return RedirectToAction(nameof(Details), id);
     }
 
-    [HttpDelete]
+    [HttpPost]
     public ActionResult Delete([FromRoute] int id)
     {
         var res = _userService.DeleteUser(id);
-        return RedirectToAction(nameof(Index));
+        return LocalRedirect("~/user/all");
     }
+
+    [HttpGet]
+    public ActionResult All()
+    {
+        var usLogic= _userService.GetUsers();
+        var usView = _mapper.Map<List<UserFullDtoView>>(usLogic);
+        ViewBag.Layout= "_Master";
+        return View(usView);
+    }
+    
+    [HttpPost]
+    public ActionResult AllUpdate(IEnumerable<UserFullDtoView> userFullDtos)
+    {
+        var us = _mapper.Map<IEnumerable<UserFullDtoLogic>>(userFullDtos);
+        var res = _userService.UpdateUsers(us);
+        _logger.LogInformation($"Count records views:{userFullDtos.Count()} logic:{us.Count()}");
+        return LocalRedirect("~/user/all");
+    }
+    [HttpPost]
+    public ActionResult EraseUser([FromRoute] int id)
+    {
+        var res = _userService.EraseUser(id);
+        return LocalRedirect("~/user/all");
+    }
+
 
 }

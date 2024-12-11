@@ -1,5 +1,5 @@
 ﻿@using Presentation.Mappers.DtoViews.UserDtoViews
-@model UserIdDtoView
+@model UserDtoView
 
 @{
     Layout = "_Master";
@@ -18,7 +18,7 @@
 <table>
     <tr>
         <td><strong>Id:</strong></td>
-        <td>@Model.Id</td>
+        <td>@ViewData["id"]</td>
     </tr>
     <tr>
         <td><strong>Логин: </strong></td>
