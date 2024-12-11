@@ -73,7 +73,7 @@ public class UserController : Controller
         return View(usView);
     }
     
-    [HttpPost]
+    [HttpGet]
     public ActionResult AllUpdate(IEnumerable<UserFullDtoView> userFullDtos)
     {
         var us = _mapper.Map<IEnumerable<UserFullDtoLogic>>(userFullDtos);
