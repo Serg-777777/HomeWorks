@@ -50,7 +50,8 @@ sealed public class UserRepository : IUserRepository
         if (user != null)
         {
             user.SetIsDelete(true);
-            this.UpdateEntity(user.Id, user);
+            _userContext.Users.Update(user);
+            _userContext.SaveChanges();
             return true;
         }
         return false;

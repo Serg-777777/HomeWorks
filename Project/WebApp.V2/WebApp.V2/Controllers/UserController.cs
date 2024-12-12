@@ -49,7 +49,8 @@ public class UserController : Controller
         }
         return BadRequest($"Не найден ID: {id}");
     }
-    [HttpPost]
+
+    [HttpGet]
     public ActionResult Edit([FromRoute] int id, [FromBody] UserDtoView userDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
@@ -57,7 +58,7 @@ public class UserController : Controller
         return RedirectToAction(nameof(Details), id);
     }
 
-    [HttpPost]
+    [HttpGet]
     public ActionResult Delete([FromRoute] int id)
     {
         var res = _userService.DeleteUser(id);
@@ -65,7 +66,8 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public ActionResult All()
+ 
+    public ActionResult<UserFullDtoView> All()
     {
         var usLogic= _userService.GetUsers();
         var usView = _mapper.Map<List<UserFullDtoView>>(usLogic);
@@ -73,15 +75,15 @@ public class UserController : Controller
         return View(usView);
     }
     
-    [HttpGet]
-    public ActionResult AllUpdate(IEnumerable<UserFullDtoView> userFullDtos)
+    [HttpPost]
+    public ActionResult AllUpdate([ModelBinder] IEnumerable<UserFullDtoView> userFullDtos)
     {
         var us = _mapper.Map<IEnumerable<UserFullDtoLogic>>(userFullDtos);
         var res = _userService.UpdateUsers(us);
         _logger.LogInformation($"Count records views:{userFullDtos.Count()} logic:{us.Count()}");
         return LocalRedirect("~/user/all");
     }
-    [HttpPost]
+    [HttpGet]
     public ActionResult EraseUser([FromRoute] int id)
     {
         var res = _userService.EraseUser(id);

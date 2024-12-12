@@ -1,7 +1,11 @@
-﻿namespace Presentation.Mappers.DtoViews.UserDtoViews;
+﻿using Microsoft.AspNetCore.Mvc;
 
+namespace Presentation.Mappers.DtoViews.UserDtoViews;
+
+[BindProperties(SupportsGet =true)]
 public class UserFullDtoView:IUserDtoView
 {
+    public UserFullDtoView() { }
     public int Id { get; set; }
     public DateTime DateCreated { get; set; }
     public bool IsDeleted { get; set; }
