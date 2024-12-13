@@ -2,7 +2,6 @@
 
 using Application.DtoLogics.UserDtoLogics;
 using AutoMapper;
-using Domain.Models;
 using Domain.Models.UserModels;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Infrastructure.Repositories.UserRepos;
@@ -40,27 +39,24 @@ public class UserService
         return null;
     }
 
-    public UserDtoLogic? GetUser(int userId)
+    public UserFullDtoLogic? GetUser(int userId)
     {
         var user = _userRepository.GetEntity(userId);
         if (user != null)
         {
-            var userIdLogic = _mapper.Map<UserDtoLogic>(user);
+            var userIdLogic = _mapper.Map<UserFullDtoLogic>(user);
             return userIdLogic;
         }
         return null;
     }
 
-    public UserDtoLogic UpdateUser(int idUser, UserDtoLogic newUser)
+    public UserFullDtoLogic? UpdateUser(int idUser, UserFullDtoLogic newUser)
     {
-        var userModel = _mapper.Map<UserModel>(newUser);
-        var user = _userRepository.UpdateEntity(idUser, userModel);
-        if (user != null)
-        {
-            var userLogic = _mapper.Map<UserDtoLogic>(user);
+
+            var userModel = _mapper.Map<UserModel>(newUser);
+            var u = _userRepository.UpdateEntity(idUser, userModel);
+            var userLogic = _mapper.Map<UserFullDtoLogic> (u);
             return userLogic;
-        }
-        return null!;
     }
     public bool DeleteUser(int id)
     {
@@ -68,9 +64,9 @@ public class UserService
         return res;
     }
     
-    public bool UpdateUsers(IEnumerable<UserFullDtoLogic> userFullDtos)
+    public bool UpdateUsers(List<UserFullDtoLogic> userFullDtos)
     {
-        var us = _mapper.Map<IEnumerable<UserModel>>(userFullDtos);
+        var us = _mapper.Map<List<UserModel>>(userFullDtos);
         var res = _userRepository.UpdateEntityRange(us);
         return res;
     }

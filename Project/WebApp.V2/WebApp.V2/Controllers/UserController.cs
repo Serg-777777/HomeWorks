@@ -41,7 +41,7 @@ public class UserController : Controller
     {
         _logger.LogInformation($":::TEST ADD::: ID:{id}");
         var userLogic = _userService.GetUser(id);
-        if(userLogic != null)
+        if (userLogic != null)
         {
             var userView = _mapper.Map<UserDtoView>(userLogic);
             ViewData["id"] = id;
@@ -51,44 +51,63 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public ActionResult Edit([FromRoute] int id, [FromBody] UserDtoView userDtoApp)
+    public ActionResult Edit([FromRoute] int id)
     {
-        var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-        var user = _userService.UpdateUser(id, userLogic);
-        return RedirectToAction(nameof(Details), id);
+        var userLogic = _userService.GetUser(id);
+        if (userLogic != null)
+        {
+            var userView= _mapper.Map<UserFullDtoView>(userLogic);
+            ViewBag.Title = "Обновление";
+            return View(userView);
+        }
+        return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
+    public ActionResult Edit([FromRoute] int id, UserFullDtoView userDtoApp)
+    {
+        var u = _userService.GetUser(id);
+        if (u != null)
+        {
+            var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoApp);
+            _userService.UpdateUser(id, userLogic);
+            return LocalRedirect("~/user/all");
+        }
+        return BadRequest($"Пользователь ID: {id} не найден");
+    }
     [HttpGet]
     public ActionResult Delete([FromRoute] int id)
     {
         var res = _userService.DeleteUser(id);
         return LocalRedirect("~/user/all");
     }
-
     [HttpGet]
- 
-    public ActionResult<UserFullDtoView> All()
+    public ActionResult All()
     {
-        var usLogic= _userService.GetUsers();
+        var usLogic = _userService.GetUsers();
         var usView = _mapper.Map<List<UserFullDtoView>>(usLogic);
-        ViewBag.Layout= "_Master";
+        ViewBag.Layout = "_Master";
         return View(usView);
     }
-    
     [HttpPost]
-    public ActionResult AllUpdate([ModelBinder] IEnumerable<UserFullDtoView> userFullDtos)
+    public ActionResult AllUpdate([FromBody] FormCollection forms)
     {
-        var us = _mapper.Map<IEnumerable<UserFullDtoLogic>>(userFullDtos);
-        var res = _userService.UpdateUsers(us);
-        _logger.LogInformation($"Count records views:{userFullDtos.Count()} logic:{us.Count()}");
+        _logger.LogInformation($"::: Request.Form Count: {forms.Count()}");
+
+        foreach (var f in forms)
+        {
+            _logger.LogInformation($"::: Request.Form Key: {f.Key} Value:{f.Value}");
+        }
+
+        // var us = _mapper.Map<List<UserFullDtoLogic>>(userFullDtos);
+        // var res = _userService.UpdateUsers(us);
+
         return LocalRedirect("~/user/all");
     }
     [HttpGet]
-    public ActionResult EraseUser([FromRoute] int id)
+    public ActionResult Erase([FromRoute] int id)
     {
         var res = _userService.EraseUser(id);
         return LocalRedirect("~/user/all");
     }
-
-
 }

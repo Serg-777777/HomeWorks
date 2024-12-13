@@ -34,12 +34,12 @@ sealed public class UserRepository : IUserRepository
     public UserModel? UpdateEntity(int userId, UserModel entity)
     {
         var user = this._UserById(userId);
-        _logger.LogInformation($":::TEST user Login:{entity.Login}, Email:{entity.Email}");
-        if (user != null)
+        _logger.LogInformation($":::TEST Login:{entity.Login}, Email:{entity.Email}");
+        if (user != null && user.Id == entity.Id)
         {
-            _userContext.Update(user.SetValues(entity));
+            user = _userContext.Update(user.SetValues(entity)).Entity;
             _userContext.SaveChanges();
-            _logger.LogInformation($":::TEST user UPDATED Id:{user.Id}, Login:{user.Login}, Email:{user.Email} Date: {user.DateCreated}");
+            _logger.LogInformation($":::TEST Id:{user.Id}, Login:{user.Login}, Email:{user.Email} Date: {user.DateCreated}");
             return user;
         }
         return null!;
@@ -49,7 +49,8 @@ sealed public class UserRepository : IUserRepository
         var user = this._UserById(userId);
         if (user != null)
         {
-            user.SetIsDelete(true);
+            user.SetIsDelete(!user.IsDeleted);
+
             _userContext.Users.Update(user);
             _userContext.SaveChanges();
             return true;
@@ -62,7 +63,7 @@ sealed public class UserRepository : IUserRepository
         return user;
     }
 
-    public bool UpdateEntityRange(IEnumerable<UserModel> userModels)
+    public bool UpdateEntityRange(List<UserModel> userModels)
     {
         _userContext.Users.UpdateRange(userModels);
         _userContext.SaveChanges();

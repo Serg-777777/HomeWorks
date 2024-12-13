@@ -1,5 +1,9 @@
 ﻿@using Presentation.Mappers.DtoViews.UserDtoViews
-@model IEnumerable<UserFullDtoView>
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.ComponentModel.DataAnnotations
+
+
+@model List<UserFullDtoView>
 <style type="text/css">
     table {
         font-family: Calibri,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -8,7 +12,8 @@
 </style>
 
 <br />
-<form method="post">
+
+<form method="post" action="/user/allupdate">
     <table>
         <tr>
             <th><span>удалён</span></th>
@@ -20,22 +25,39 @@
             <th></th>
             <th></th>
         </tr>
-        
+        @for (var i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td><input readonly Id="IsDeleted-@Model[i].Id" name="IsDeleted-@Model[i].Id" asp-for="@Model[i].IsDeleted" border="0" type="checkbox" checked="@Model[i].IsDeleted" /></td>
+                <td><input readonly Id="Id-@Model[i].Id" name="Id-@Model[i].Id" asp-for="@Model[i].Id" border="0" type="datetime" value="@Model[i].Id" /></td>
+                <td><input readonly Id="Login-@Model[i].Id" name="Login-@Model[i].Id" asp-for="@Model[i].Login" border="0" type="text" value="@Model[i].Login" /></td>
+                <td><input readonly Id="DateCreated-@Model[i].Id" name="DateCreated-@Model[i].Id" asp-for="@Model[i].DateCreated" border="0" type="text" value="@Model[i].DateCreated" /></td>
+                <td><input readonly Id="Email-@Model[i].Id" name="Email-@Model[i].Id" asp-for="@Model[i].Email" border="0" type="text" value="@Model[i].Email" /></td>
+                 
+                <td><a href="/user/delete/@Model[i].Id">активность</a></td>
+                <td><a href="/user/edit/@Model[i].Id">изменить</a></td>
+                <td><a style="color:crimson" href="/user/erase/@Model[i].Id">удалить</a></td>
+            </tr>
+        }
+
+        @*
         @foreach (var u in Model)
         {
             <tr>
-                <td><input border="0" type="checkbox" asp-for="@u.IsDeleted" name="IsDeleted" value="@u.IsDeleted" /></td>
-                <td><input disabled border="0" type="text" asp-for="@u.Id" name="Id" value="@u.Id" /></td>
-                <td><input disabled border="0" type="text" asp-for="@u.Login" name="Login" value="@u.Login" /></td>
-                <td><input disabled border="0" type="text" asp-for="@u.DateCreated" name="DateCreated" value="@u.DateCreated" /></td>
-                <td><input border="0" type="text" asp-for="@u.Email" name="Email" value="@u.Email" /></td>
+                <td><input id="IsDeleted" border="0" type="checkbox" asp-for="@u.IsDeleted" checked="@u.IsDeleted" /></td>
+                <td><input id="Id" disabled border="0" type="text" asp-for="@u.Id" value="@u.Id" /></td>
+                <td><input id="Login" disabled border="0" type="text" asp-for="@u.Login" value="@u.Login" /></td>
+                <td><input id="DateCreated" border="0" type="text" asp-for="@u.DateCreated" value="@u.DateCreated" /></td>
+                <td><input id="Email" border="0" type="text" asp-for="@u.Email" value="@u.Email" /></td>
 
-                <td><a href="/user/delete/@u.Id">исключить</a></td>
+                <td><a href="/user/delete/@u.Id">активность</a></td>
                 <td><a href="/user/edit/@u.Id">обновить</a></td>
-                <td><a href="/user/eraseuser/@u.Id">удалить</a></td>
+                <td><a style="color:red;" href="/user/erase/@u.Id">удалить</a></td>
             </tr>
         }
+        *@
+
     </table>
-    <button type="submit" action="/user/allupdate">выполнить</button>
+    <button type="submit">выполнить</button>
 </form>
 <br>

@@ -1,0 +1,22 @@
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+@using Microsoft.AspNetCore.Mvc
+
+@model UserFullDtoView
+@{
+    var dto = Model;
+}
+
+<h2>ViewBag.Title</h2>
+<hr />
+<form method="post" action="/user/edit/@dto.Id">
+<table>
+    <tr>
+        <td><input name="IsDeleted" type="checkbox" for="@dto.IsDeleted" checked="@dto.IsDeleted" /></td>
+        <td><input disabled name="Id" type="text" for="@dto.Id" value="@dto.Id" /></td>
+        <td><input disabled name="Login" type="text" for="@dto.Login" value="@dto.Login" /></td>
+        <td><input name="DateCreated" type="text" for="@dto.DateCreated" value="@dto.DateCreated" /></td>
+        <td><input name="Email" type="text" for="@dto.Email" value="@dto.Email" /></td>
+    </tr>
+</table>
+<button type="submit">Обновить</button>
+</form>
