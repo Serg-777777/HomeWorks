@@ -58,6 +58,7 @@ public class UserController : Controller
         {
             var userView= _mapper.Map<UserFullDtoView>(userLogic);
             ViewBag.Title = "Обновление";
+            ViewData["layot"] = "_Master";
             return View(userView);
         }
         return RedirectToAction(nameof(Index));

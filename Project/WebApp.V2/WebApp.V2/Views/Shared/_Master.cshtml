@@ -3,18 +3,29 @@
 }
 
 <style type="text/css">
-    body{
-        color:blue;
+    body {
+        color: blue;
         font-family: Calibri, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    body hr{
-        background-color:darkblue;
+
+        body a {
+            color: maroon
+        }
+
+    label {
+        font-style: italic;
     }
+
+    hr {
+        background-color: darkblue;
+        color: darkblue;
+    }
+
     .borderColor {
         border-right-color: red;
         border-right-style: solid;
         border-right-width: 1px;
-        margin-right:10px;
+        margin-right: 10px;
     }
 </style>
 
@@ -36,7 +47,7 @@
                     <div class="borderColor">
                         <strong>USERS</strong><br />
                         <a href="/user">Форма</a><br />
-                        <a href="/user/all">Все</a>
+                        <a href="/user/all">Список</a>
                     </div>
                 </td>
                 <td>@RenderBody()</td>
@@ -45,7 +56,7 @@
     </div>
     <br />
     <br />
-    <div style="height:25px; background-color:cadetblue"></div>
+    <div style="height:100%; background-color:cadetblue"></div>
 </body>
 
 </html>
