@@ -20,6 +20,16 @@ public class UserService
         _mapper = mapper;
         _logger = logger;
     }
+    public UserFullDtoLogic? Authorize(string login, string password)
+    {
+        var u = _userRepository.Authorize(login, password);
+        if(u != null)
+        {
+            var uLogic = _mapper.Map<UserFullDtoLogic>(u);
+            return uLogic;
+        }
+        return null;
+    }
     public List<UserFullDtoLogic> GetUsers()
     {
         var users = _userRepository.Entities;

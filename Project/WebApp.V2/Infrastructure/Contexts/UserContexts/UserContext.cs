@@ -12,11 +12,12 @@ namespace Infrastructure.Contexts.UserContexts;
 public class UserContext: DbContext
 {
    public DbSet<UserModel> Users { get; set; } = null!;
-
-    public UserContext()
+    public DbSet<UserProfileModel> Profiles { get; set; } = null!;
+    public UserContext() 
     {
         //Database.EnsureDeleted();
         //Database.EnsureCreated();
+        
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,5 +29,6 @@ public class UserContext: DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserConfig());
+        modelBuilder.ApplyConfiguration(new UserProfileConfig());
     }
 }

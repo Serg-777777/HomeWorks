@@ -19,35 +19,61 @@ public class UserController : Controller
         _mapper = mapper;
     }
 
+    [HttpGet]
+    public ActionResult Authorize()
+    {
+        ViewBag.Title = "Авторизация";
+        return View();
+    }
+
+    [HttpPost]
+    public ActionResult Authorize(string login, string password)
+    {
+        var userFullLogic = _userService.Authorize(login, password);
+        
+        if (userFullLogic != null)
+        {
+            var userFullView = _mapper.Map<UserFullDtoView>(userFullLogic);
+            var profModel = userFullLogic?.ProfileModel;
+            var profLogic = _mapper.Map<UserProfileDtoLogic>(profModel);
+            var profView = _mapper.Map<UserProfileDtoView>(profLogic);
+            var obj = new UserInfoDtoView(userFullView, profView);
+            ViewBag.IdUser = userFullLogic?.Id;
+            return View("Info", obj);
+            // return  RedirectToAction("Info", id);
+           // return LocalRedirect($"~/user/info/{id}");
+        }
+        return BadRequest("Пользователь не найден!");
+    }
     public ActionResult Index()
     {
         var userDtoApp = new UserDtoView();
         ViewBag.Title = "Форма";
         return View(userDtoApp);
     }
+    [HttpGet]
+    public ActionResult Info([FromRoute] int idUser)
+    {
+        var userFullLogic = _userService.GetUser(idUser);
+        if(userFullLogic != null)
+        {
+            var userFullView = _mapper.Map<UserFullDtoView>(userFullLogic);
+            var profLogic = _mapper.Map<UserProfileDtoLogic>(userFullLogic?.ProfileModel);
+            var profView = _mapper.Map<UserProfileDtoView>(profLogic);
+            var obj = new UserInfoDtoView(userFullView, profView);
+            return View(obj);
+        }
+        return BadRequest("Пользователь не найден!");
 
+    }
     [HttpPost]
     public ActionResult Add(UserDtoView userDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
         var userNewModel = _userService.CreateUser(userLogic);
-        _logger.LogInformation($":::TEST ADD::: Id:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email}");
+        _logger.LogInformation($":::TEST ADD::: Id:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email},  Role:{userNewModel?.Role?.RoleUser}");
         var id = userNewModel?.Id;
-        return LocalRedirect($"~/user/details/{id}");
-    }
-
-    [HttpGet]
-    public ActionResult Details([FromRoute] int id)
-    {
-        _logger.LogInformation($":::TEST ADD::: ID:{id}");
-        var userLogic = _userService.GetUser(id);
-        if (userLogic != null)
-        {
-            var userView = _mapper.Map<UserDtoView>(userLogic);
-            ViewData["id"] = id;
-            return View(userView);
-        }
-        return BadRequest($"Не найден ID: {id}");
+        return LocalRedirect($"~/user/info/{id}");
     }
 
     [HttpGet]
@@ -57,7 +83,7 @@ public class UserController : Controller
         if (userLogic != null)
         {
             var userView= _mapper.Map<UserFullDtoView>(userLogic);
-            ViewBag.Title = "Обновление";
+            ViewBag.Title = "Правка";
             ViewData["layot"] = "_Master";
             return View(userView);
         }
@@ -70,7 +96,12 @@ public class UserController : Controller
         var u = _userService.GetUser(id);
         if (u != null)
         {
+            _logger.LogInformation($":::TEST::: Role View:{userDtoApp.Role?.RoleUser}");
+
             var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoApp);
+
+            _logger.LogInformation($":::TEST::: Role Logic:{userDtoApp.Role?.RoleUser}");
+
             _userService.UpdateUser(id, userLogic);
             return LocalRedirect("~/user/all");
         }
@@ -90,10 +121,12 @@ public class UserController : Controller
         ViewBag.Layout = "_Master";
         return View(usView);
     }
+
     [HttpPost]
-    public ActionResult AllUpdate([FromBody] FormCollection forms)
+    public ActionResult AllUpdate(IFormCollection forms)
     {
-        _logger.LogInformation($"::: Request.Form Count: {forms.Count()}");
+        _logger.LogInformation($"::: TEST NAME DateCreated-: {forms["DateCreated-1"]}");
+        _logger.LogInformation($"::: TEST Request.Form Count: {forms.Count()}");
 
         foreach (var f in forms)
         {

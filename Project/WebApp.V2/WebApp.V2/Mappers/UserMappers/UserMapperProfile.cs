@@ -19,6 +19,7 @@ public class UserMapperProfile : Profile
         CreateMap<UserModel, UserFullDtoLogic>().ReverseMap();
         CreateMap<UserFullDtoLogic, UserFullDtoView>().ReverseMap();
 
-
+        CreateMap<UserProfileModel, UserProfileDtoLogic>().ReverseMap();
+        CreateMap<UserProfileDtoLogic, UserProfileDtoView>().ReverseMap();
     }
 }

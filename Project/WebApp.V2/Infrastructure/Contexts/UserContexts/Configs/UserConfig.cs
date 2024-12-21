@@ -12,6 +12,10 @@ namespace Infrastructure.Contexts.UserContexts.Configs
             builder.OwnsOne(p => p.Role);
             builder.Property(p => p.Id).ValueGeneratedOnAdd();
             builder.HasAlternateKey(p=>p.Login);
+            builder
+                .HasOne(p => p.ProfileModel)
+                .WithOne(p => p.UserModel)
+                .HasForeignKey<UserProfileModel>(p => p.UserModelId);
         }
     }
 }

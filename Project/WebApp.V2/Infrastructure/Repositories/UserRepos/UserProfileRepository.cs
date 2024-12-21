@@ -1,43 +1,57 @@
 ﻿
 
+using Domain.Models;
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
-    sealed public class UserProfileRepository
+    sealed public class UserProfileRepository: IUserProfileRepository
     {
-        DbSet<UserProfileModel> _profiles=default!;
-        public UserProfileRepository(UserContext userContext)
+        UserContext _context =default!;
+        public UserProfileRepository(UserContext context)
         {
+            _context = context;
         }
 
-        public IQueryable<UserProfileModel> Entities => _profiles.AsQueryable();
+        public List<UserProfileModel> Entities => _context.Profiles.ToList();
 
-        public bool AddEntity(UserProfileModel entity)
+        public UserProfileModel? AddEntity(UserProfileModel entity)
         {
-            throw new NotImplementedException();
+           var prof = _context.Profiles.Add(entity).Entity;
+            return prof;
         }
 
-        public UserProfileModel? GetEntity(string entityID)
+        public UserProfileModel? GetEntity(int idUser)
         {
-            throw new NotImplementedException();
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserModelId == idUser);
+            return prof;
         }
 
-        public UserSettingModel? GetSettingsByUserId(string idUser)
+        public bool RemoveEntity(int idUser)
         {
-            throw new NotImplementedException();
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserModelId == idUser);
+            if(prof!=null)
+            {
+                var res = _context.Profiles.Remove(prof);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
-        public bool RemoveEntity(string entityID)
+        public UserProfileModel? UpdateEntity(int idUser, UserProfileModel entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public UserProfileModel UpdateEntity(string entityID, UserProfileModel entity)
-        {
-            throw new NotImplementedException();
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserModelId == idUser);
+            if (prof != null)
+            {
+                prof.SetValues(entity);
+                var res = _context.Profiles.Update(prof);
+                _context.SaveChanges();
+                return res.Entity;
+            }
+            return null;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿
+using Domain.Models.UserModels;
+
 namespace Presentation.Mappers.DtoViews.UserDtoViews;
 
 //[BindProperties(SupportsGet =true)]
@@ -10,6 +12,6 @@ public class UserFullDtoView:IUserDtoView
     public string? Login { get; set; }
     public DateTime DateCreated { get; set; }
     public string? Email { get; set; }
-
+    public UserRoleModel? Role { get;  set; }
 }
 

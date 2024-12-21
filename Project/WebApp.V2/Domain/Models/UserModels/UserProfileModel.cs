@@ -3,19 +3,18 @@ namespace Domain.Models.UserModels;
 
  public class UserProfileModel : IEntity
 {
-    public const string TableName = "UserProfiles";
 
     public int Id { get; set; }
-    public string? FirstName { get; private set; }
-    public string? LastName { get; private set; }
-    public string? Country { get; private set; }
-    public string? City { get; private set; }
-    public int? Age { get; private set; }
+    public string? FirstName { get; private set; } = "";
+    public string? LastName { get; private set; } = "";
+    public string? Country { get; private set; } = "";
+    public string? City { get; private set; } = "";
+    public int? Age { get; private set; } = null;
 
-    public int UserModelId { get; set; }
+    public int? UserModelId { get; set; }
     public UserModel? UserModel { get; set; }
 
-    protected UserProfileModel() { }
+    public UserProfileModel() { }
 
     public UserProfileModel(string? firstName, string? lastName, string? country, string? city, int? age)
     {
@@ -38,6 +37,7 @@ namespace Domain.Models.UserModels;
     public UserProfileModel SetUserProperty(UserModel user)
     {
         UserModel = user;
+        UserModelId = user.Id;
         return this;
     }
     public bool Equals(UserProfileModel? other)

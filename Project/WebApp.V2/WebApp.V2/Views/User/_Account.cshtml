@@ -1,0 +1,36 @@
+﻿
+@using Presentation.Mappers.DtoViews.UserDtoViews
+@model UserFullDtoView
+@{
+    var obj = Model as UserFullDtoView;
+}
+<h3>Аккаунт</h3>
+<div><a href="edit/@obj.Id">изменить</a></div>
+<br />
+<table>
+    <tr>
+        <td><label>Активен</label></td>
+        <td><input type="checkbox" checked="@obj.IsDeleted"></td>
+    </tr>
+    <tr>
+        <td><label>Логин</label></td>
+        <td><span>@obj.Login</span></td>
+    </tr>
+    <tr>
+        <td><label>Добавлен</label></td>
+        <td><span>@obj.DateCreated</span></td>
+    </tr>
+    <tr>
+        <td><label>Почта</label></td>
+        <td><span>@obj.Email</span></td>
+    </tr>
+    <tr>
+        <td><label>Роль</label></td>
+        <td><span>@obj.Role?.RoleUser</span></td>
+    </tr>
+    <tr>
+        <td><label>ID</label></td>
+        <td><span>@obj.Id</span></td>
+    </tr>
+</table>
+<br />

@@ -12,21 +12,31 @@ namespace Domain.Models.UserModels;
     public string? Password { get; private set; }
     public string? Email { get; private set; }
     public UserRoleModel? Role { get; private set; }
+    public UserProfileModel? ProfileModel { get; private set; }
 
     protected UserModel() { }
-    public UserModel(string login, string password, string email, DateTime dateTime, UserRoleModel role)
+    public UserModel(string login, string password, string email, DateTime dateTime, UserRoleModel role, UserProfileModel userProfileModel)
     {
         Login = login ?? throw new ArgumentNullException(nameof(login));
         Password = password ?? throw new ArgumentNullException(nameof(password));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         DateCreated = dateTime;
-        Role = role ?? throw new ArgumentNullException(nameof(email)); ;
+        Role = role ?? throw new ArgumentNullException(nameof(email));
+        ProfileModel = userProfileModel;
+    }
+    public UserModel SetProfile(UserProfileModel userProfileModel)
+    {
+        ProfileModel = userProfileModel;
+        return this;
     }
     public UserModel SetValues(UserModel entity)
     {
-       //Login = entity.Login;
+       // Login = entity.Login;
         Email = entity.Email;
         Password = entity.Password;
+        Role= entity.Role;
+        ProfileModel = entity.ProfileModel;
+
         return this;
     }
     public UserModel SetRole(UserRoleModel userRole)

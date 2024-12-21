@@ -9,6 +9,7 @@
 
 <h2>@ViewBag.Title</h2>
 <hr />
+
 <form method="post" action="/user/edit/@dto.Id">
     <table>
         <tr>
@@ -30,6 +31,12 @@
             <td><input name="DateCreated" type="text" for="@dto.DateCreated" value="@dto.DateCreated" /></td>
         </tr>
         <tr>
+            <td><label class="lblClass">Роль: </label></td>
+        </tr>
+        <tr>
+            <td><input name="Role.RoleUser" type="text" for="@dto.Role?.RoleUser" value="@dto.Role?.RoleUser" /></td>
+        </tr>
+        <tr>
             <td><label class="lblClass">Почта: </label></td>
         </tr>
         <tr>
@@ -37,6 +44,6 @@
         </tr>
         <tr>
         </tr>
-    </table>
-    <button type="submit">Обновить</button>
+    </table><br />
+    <button type="submit">сохранить</button>
 </form>

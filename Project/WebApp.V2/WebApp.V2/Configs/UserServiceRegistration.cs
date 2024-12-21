@@ -1,4 +1,6 @@
-﻿using Application.ServicesViews.UserServicesApps;
+﻿using Application.AppServices.UserAppServices;
+using Application.ServicesViews.UserServicesApps;
+using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
 using Infrastructure.Repositories.UserRepos;
 
@@ -10,8 +12,10 @@ namespace Presentation.Configs
         {
             services
             .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IUserProfileRepository, UserProfileRepository>()
             .AddScoped<UserService>()
-            .AddDbContext<UserContext>();
+            .AddDbContext<UserContext>()
+            .AddScoped<UserProfileService>();
             return services;
         }
     }

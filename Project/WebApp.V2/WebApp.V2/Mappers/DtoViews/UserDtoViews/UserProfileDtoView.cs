@@ -1,6 +1,6 @@
 ﻿namespace Presentation.Mappers.DtoViews.UserDtoViews;
 
-public class UserProfileDtoApp : IUserDtoView
+public class UserProfileDtoView : IUserDtoView
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

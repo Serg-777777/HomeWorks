@@ -43,14 +43,23 @@
         <br />
         <table height="200px">
             <tr>
-                <td width="100px">
+                <td width="150px">
                     <div class="borderColor">
                         <strong>USERS</strong><br />
-                        <a href="/user">Форма</a><br />
-                        <a href="/user/all">Список</a>
+                        <hr />
+                        <a href="/user">Регистрация</a><br />
+                        <a href="/user/authorize">Авторизация</a><br />
+                        <a href="/user/authorize">Профиль</a><br />
+                         <hr />
+                        <a href="/user/all">Список</a><br />
+                        <br />
                     </div>
                 </td>
-                <td>@RenderBody()</td>
+                <td>
+                    <h2>@ViewBag.Title</h2>
+                    <hr />
+                    @RenderBody()
+                </td>
             </tr>
         </table>
     </div>

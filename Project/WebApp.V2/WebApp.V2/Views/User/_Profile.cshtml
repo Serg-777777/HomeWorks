@@ -1,0 +1,27 @@
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+@model UserProfileDtoView
+@{
+    var dtoView = Model != null ? Model : new UserProfileDtoView(); ;
+}
+<h3>Профиль</h3>
+<div><a href="/profile/edit/@ViewBag.UserId">изменить</a> </div>
+<br />
+
+<table>
+    <tr>
+        <td><label>Имя</label></td>
+        <td>@dtoView.FirstName @dtoView.LastName</td>
+    </tr>
+    <tr>
+        <td><label>Возраст</label></td>
+        <td>@dtoView.Age?</td>
+    </tr>
+    <tr>
+        <td><label>Город</label></td>
+        <td>@dtoView.City</td>
+    </tr>
+    <tr>
+        <td><label>Страна</label></td>
+        <td>@dtoView.Country</td>
+    </tr>
+</table>

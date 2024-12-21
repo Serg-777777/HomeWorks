@@ -1,0 +1,32 @@
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+
+@model UserProfileDtoView
+@{
+    Layout = "_Master";
+    var dto = Model != null ? Model : new UserProfileDtoView();
+}
+<form action="/profile/editing/@ViewBag.IdUser" method="post">
+<table>
+    <tr>
+        <td><label>Имя</label></td>
+        <td><input asp-for="@dto.FirstName" name="FirstName" type="text" value="@dto.FirstName" /></td>
+    </tr>
+    <tr>
+        <td><label>Фамилия</label></td>
+        <td><input asp-for="@dto.LastName" name="LastName" type="text" value="@dto.LastName" /></td>
+    </tr>
+    <tr>
+        <td><label>Возраст</label></td>
+        <td><input asp-for="@dto.Age" name="Age" type="number" value="@dto.Age" /></td>
+    </tr>
+    <tr>
+        <td><label>Город</label></td>
+        <td><input asp-for="@dto.City" name="City" type="text" value="@dto.City" /></td>
+    </tr>
+    <tr>
+        <td><label>Страна</label></td>
+        <td><input asp-for="@dto.Country" name="Country" type="text" value="@dto.Country" /></td>
+    </tr>
+    </table><br />
+<button type="submit">Сохранить</button>
+</form>

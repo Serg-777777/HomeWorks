@@ -1,0 +1,17 @@
+﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+@model UserInfoDtoView
+@{
+    Layout = "_Master";
+}
+@{
+    var account = Model.Account as UserFullDtoView;
+    var profile = Model.Profile as UserProfileDtoView;
+}
+
+@{
+    await Html.RenderPartialAsync("_Account", account);
+}
+<br /> 
+@{
+    await Html.RenderPartialAsync("_Profile", profile);
+}

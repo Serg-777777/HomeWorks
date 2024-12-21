@@ -20,10 +20,16 @@ sealed public class UserRepository : IUserRepository
     public UserModel? AddEntity(UserModel entity)
     {
         var role = new UserRoleModel() { RoleUser = "гость" };
-        var user = new UserModel(entity.Login!, entity.Password!, entity.Email!, entity.DateCreated, role);
+        var prof = new UserProfileModel();
+        var user = new UserModel(entity.Login!, entity.Password!, entity.Email!, entity.DateCreated, role, prof);
         var newUser = _userContext.Users.Add(user).Entity;
+
+      //  prof.SetUserProperty(newUser);
+        _userContext.Profiles.Add(prof);
         _userContext.SaveChanges();
+
         _logger.LogInformation($":::TEST AddEntity Login:{newUser.Login}, Email:{newUser.Email} Date: {newUser.DateCreated}");
+
         return newUser;
     }
     public UserModel? GetEntity(int userId)
@@ -34,7 +40,7 @@ sealed public class UserRepository : IUserRepository
     public UserModel? UpdateEntity(int userId, UserModel entity)
     {
         var user = this._UserById(userId);
-        _logger.LogInformation($":::TEST Login:{entity.Login}, Email:{entity.Email}");
+        _logger.LogInformation($":::TEST REPOS Login:{entity.Login}, Role:{entity.Role?.RoleUser}");
         if (user != null && user.Id == entity.Id)
         {
             user = _userContext.Update(user.SetValues(entity)).Entity;
@@ -76,5 +82,11 @@ sealed public class UserRepository : IUserRepository
         _userContext.Users.Remove(u!);
         _userContext.SaveChanges();
         return true;
+    }
+
+    public UserModel? Authorize(string login, string password)
+    {
+        var user = _userContext.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+        return user;
     }
 }
