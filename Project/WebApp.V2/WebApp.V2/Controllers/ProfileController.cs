@@ -34,16 +34,15 @@ namespace Presentation.Controllers
             return BadRequest("Нет профиля пользователя!");
         }
 
-        [HttpGet]
-        public ActionResult Edit([FromRoute] int idUser)
+        [HttpGet("{id}")]
+        public ActionResult Edit(int id)
         {
-            ViewBag.UserId = idUser;
             ViewBag.Title = "Профайл";
-            var prof = _profileService.GetProfile(idUser);
+            var prof = _profileService.GetProfile(id);
             UserProfileDtoView? profView;
             if (prof != null)
             {
-                ViewBag.IdUser = idUser;
+                ViewBag.IdUser = id;
                 profView = _mapper.Map<UserProfileDtoView>(prof);
             }
             else

@@ -28,10 +28,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Menu}/{action=Index}/{id?}");
 
-//TEST
-app.MapControllerRoute(
-    name: "default",
-    pattern: "User/Profile/{action=Index}/{id?}");
-//TEST
 
 app.Run();

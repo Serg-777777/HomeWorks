@@ -12,7 +12,7 @@ namespace Domain.Models.UserModels;
     public string? Password { get; private set; }
     public string? Email { get; private set; }
     public UserRoleModel? Role { get; private set; }
-    public UserProfileModel? ProfileModel { get; private set; }
+    public UserProfileModel? ProfileModel { get; set; }
 
     protected UserModel() { }
     public UserModel(string login, string password, string email, DateTime dateTime, UserRoleModel role)
@@ -21,6 +21,7 @@ namespace Domain.Models.UserModels;
         Password = password ?? throw new ArgumentNullException(nameof(password));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         DateCreated = dateTime;
+        Role = role;
     }
     public UserModel SetProfile(UserProfileModel userProfileModel)
     {
