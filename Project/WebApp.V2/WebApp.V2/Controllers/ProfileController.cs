@@ -28,8 +28,10 @@ namespace Presentation.Controllers
                 var dtoLogic = _mapper.Map<UserProfileDtoLogic>(dtoView);
                 var profNew = _profileService.UpdateProfile(idUser, dtoLogic);
                 var profNewView = _mapper.Map<UserProfileDtoView>(profNew);
+                ViewBag.IdUser = idUser;
+                return LocalRedirect($"/user/info/{idUser}");
             }
-            return LocalRedirect($"/user/info/{idUser}");
+            return BadRequest("Нет профиля пользователя!");
         }
 
         [HttpGet]
@@ -41,6 +43,7 @@ namespace Presentation.Controllers
             UserProfileDtoView? profView;
             if (prof != null)
             {
+                ViewBag.IdUser = idUser;
                 profView = _mapper.Map<UserProfileDtoView>(prof);
             }
             else

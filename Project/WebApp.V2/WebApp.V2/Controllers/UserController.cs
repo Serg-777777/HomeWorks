@@ -45,6 +45,7 @@ public class UserController : Controller
         }
         return BadRequest("Пользователь не найден!");
     }
+
     public ActionResult Index()
     {
         var userDtoApp = new UserDtoView();
@@ -73,6 +74,7 @@ public class UserController : Controller
         var userNewModel = _userService.CreateUser(userLogic);
         _logger.LogInformation($":::TEST ADD::: Id:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email},  Role:{userNewModel?.Role?.RoleUser}");
         var id = userNewModel?.Id;
+        ViewBag.IdUser = id;
         return LocalRedirect($"~/user/info/{id}");
     }
 
@@ -85,6 +87,7 @@ public class UserController : Controller
             var userView= _mapper.Map<UserFullDtoView>(userLogic);
             ViewBag.Title = "Правка";
             ViewData["layot"] = "_Master";
+            ViewBag.IdUser = id;
             return View(userView);
         }
         return RedirectToAction(nameof(Index));
@@ -103,7 +106,8 @@ public class UserController : Controller
             _logger.LogInformation($":::TEST::: Role Logic:{userDtoApp.Role?.RoleUser}");
 
             _userService.UpdateUser(id, userLogic);
-            return LocalRedirect("~/user/all");
+            ViewBag.IdUser = id;
+            return LocalRedirect($"~/user/info/{id}");
         }
         return BadRequest($"Пользователь ID: {id} не найден");
     }
