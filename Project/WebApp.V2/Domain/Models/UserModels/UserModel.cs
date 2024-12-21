@@ -15,14 +15,12 @@ namespace Domain.Models.UserModels;
     public UserProfileModel? ProfileModel { get; private set; }
 
     protected UserModel() { }
-    public UserModel(string login, string password, string email, DateTime dateTime, UserRoleModel role, UserProfileModel userProfileModel)
+    public UserModel(string login, string password, string email, DateTime dateTime, UserRoleModel role)
     {
         Login = login ?? throw new ArgumentNullException(nameof(login));
         Password = password ?? throw new ArgumentNullException(nameof(password));
         Email = email ?? throw new ArgumentNullException(nameof(email));
         DateCreated = dateTime;
-        Role = role ?? throw new ArgumentNullException(nameof(email));
-        ProfileModel = userProfileModel;
     }
     public UserModel SetProfile(UserProfileModel userProfileModel)
     {

@@ -15,7 +15,7 @@ namespace Infrastructure.Contexts.UserContexts.Configs
             builder
                 .HasOne(p => p.ProfileModel)
                 .WithOne(p => p.UserModel)
-                .HasForeignKey<UserProfileModel>(p => p.UserModelId);
+                .HasForeignKey<UserProfileModel>(p => p.Id);
         }
     }
 }

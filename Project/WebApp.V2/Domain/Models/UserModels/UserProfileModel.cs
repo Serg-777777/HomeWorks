@@ -10,8 +10,6 @@ namespace Domain.Models.UserModels;
     public string? Country { get; private set; } = "";
     public string? City { get; private set; } = "";
     public int? Age { get; private set; } = null;
-
-    public int? UserModelId { get; set; }
     public UserModel? UserModel { get; set; }
 
     public UserProfileModel() { }
@@ -37,7 +35,6 @@ namespace Domain.Models.UserModels;
     public UserProfileModel SetUserProperty(UserModel user)
     {
         UserModel = user;
-        UserModelId = user.Id;
         return this;
     }
     public bool Equals(UserProfileModel? other)

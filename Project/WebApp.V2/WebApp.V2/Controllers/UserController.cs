@@ -53,7 +53,7 @@ public class UserController : Controller
         return View(userDtoApp);
     }
     [HttpGet]
-    public ActionResult Info([FromRoute] int idUser)
+    public ActionResult Info(int idUser)
     {
         var userFullLogic = _userService.GetUser(idUser);
         if(userFullLogic != null)

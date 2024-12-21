@@ -1,9 +1,7 @@
 ﻿
 
-using Domain.Models;
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
@@ -25,13 +23,13 @@ namespace Infrastructure.Repositories.UserRepos
 
         public UserProfileModel? GetEntity(int idUser)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserModelId == idUser);
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserModel!.Id == idUser);
             return prof;
         }
 
         public bool RemoveEntity(int idUser)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserModelId == idUser);
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserModel!.Id == idUser);
             if(prof!=null)
             {
                 var res = _context.Profiles.Remove(prof);
@@ -43,7 +41,7 @@ namespace Infrastructure.Repositories.UserRepos
 
         public UserProfileModel? UpdateEntity(int idUser, UserProfileModel entity)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserModelId == idUser);
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserModel!.Id == idUser);
             if (prof != null)
             {
                 prof.SetValues(entity);

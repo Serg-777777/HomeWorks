@@ -21,10 +21,12 @@ sealed public class UserRepository : IUserRepository
     {
         var role = new UserRoleModel() { RoleUser = "гость" };
         var prof = new UserProfileModel();
-        var user = new UserModel(entity.Login!, entity.Password!, entity.Email!, entity.DateCreated, role, prof);
+        var user = new UserModel(entity.Login!, entity.Password!, entity.Email!, entity.DateCreated, role);
+       // user.SetProfile(prof);
         var newUser = _userContext.Users.Add(user).Entity;
-
-      //  prof.SetUserProperty(newUser);
+        // _userContext.SaveChanges();
+        
+        prof.SetUserProperty(user);
         _userContext.Profiles.Add(prof);
         _userContext.SaveChanges();
 
