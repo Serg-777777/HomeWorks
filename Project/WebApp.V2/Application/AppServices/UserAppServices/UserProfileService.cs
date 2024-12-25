@@ -24,7 +24,7 @@ namespace Application.AppServices.UserAppServices
         public UserProfileDtoLogic? GetProfile(int idUser)
         {
             var prof = _profileRepository.GetEntity(idUser);
-            if (prof == null)
+            if (prof != null)
             {
                 var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
                 return profLogic;

@@ -1,12 +1,8 @@
 ﻿
-
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
-
-
 namespace Infrastructure.Contexts.UserContexts;
 
 public class UserContext: DbContext
@@ -16,7 +12,7 @@ public class UserContext: DbContext
     public UserContext() 
     {
         //Database.EnsureDeleted();
-        //Database.EnsureCreated();
+        Database.EnsureCreated();
         
     }
 

@@ -20,6 +20,7 @@ public class UserService
         _mapper = mapper;
         _logger = logger;
     }
+    
     public UserFullDtoLogic? Authorize(string login, string password)
     {
         var u = _userRepository.Authorize(login, password);
@@ -34,16 +35,24 @@ public class UserService
     {
         var users = _userRepository.Entities;
         var usersLogics = _mapper.Map<List<UserFullDtoLogic>>(users);
-        _logger.LogInformation($":::TEST ALL count: {usersLogics.Count}");
         return usersLogics;
     }
+    
     public UserFullDtoLogic? CreateUser(UserDtoLogic userDtoLogic)
     {
-        var userModel = _mapper.Map<UserModel>(userDtoLogic).SetDateCreated(DateTime.Now);
+        var userModel = _mapper.Map<UserModel>(userDtoLogic);
+        var role = new UserRoleModel() { RoleUser = "гость" };
+        var prof = new UserProfileModel();
+        userModel
+            .SetDateCreated(DateTime.Now)
+            .SetRole(role)
+            .SetProfile(prof);
+        prof.SetUserProperty(userModel);
         var newUser = _userRepository.AddEntity(userModel);
         if (newUser != null)
         {
             var newUserLogic = _mapper.Map<UserFullDtoLogic>(newUser);
+           // newUserLogic.ProfileModel = userModel.ProfileModel;
             return newUserLogic!;
         }
         return null;
@@ -60,11 +69,10 @@ public class UserService
         return null;
     }
 
-    public UserFullDtoLogic? UpdateUser(int idUser, UserFullDtoLogic newUser)
+    public UserFullDtoLogic? UpdateUser(UserFullDtoLogic newUser)
     {
-
             var userModel = _mapper.Map<UserModel>(newUser);
-            var u = _userRepository.UpdateEntity(idUser, userModel);
+            var u = _userRepository.UpdateEntity(newUser.Id, userModel);
             var userLogic = _mapper.Map<UserFullDtoLogic> (u);
             return userLogic;
     }

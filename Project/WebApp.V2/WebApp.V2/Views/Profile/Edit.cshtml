@@ -3,9 +3,11 @@
 @model UserProfileDtoView
 @{
     Layout = "_Master";
-    var dto = Model != null ? Model : new UserProfileDtoView();
+    var dto = Model;
 }
-<form action="/profile/editing/@ViewBag.IdUser" method="post">
+
+<form action="/profile/editing" method="post">
+    <input hidden type="number" name="UserModelId" asp-for="@dto.UserModelId" value="@dto.UserModelId" />
 <table>
     <tr>
         <td><label>Имя</label></td>

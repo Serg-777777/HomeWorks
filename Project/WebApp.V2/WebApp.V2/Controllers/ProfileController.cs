@@ -20,34 +20,31 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public ActionResult Editing([FromRoute] int idUser, UserProfileDtoView dtoView)
+        public ActionResult Editing(UserProfileDtoView dtoView)
         {
-            var profLogic = _profileService.GetProfile(idUser);
+            int id = (int)dtoView.UserModelId!;
+            var profLogic = _profileService.GetProfile(id);
             if (profLogic != null)
             {
                 var dtoLogic = _mapper.Map<UserProfileDtoLogic>(dtoView);
-                var profNew = _profileService.UpdateProfile(idUser, dtoLogic);
+                var profNew = _profileService.UpdateProfile(id, dtoLogic);
                 var profNewView = _mapper.Map<UserProfileDtoView>(profNew);
-                ViewBag.IdUser = idUser;
-                return LocalRedirect($"/user/info/{idUser}");
+                profNewView.UserModelId = id;
+                return LocalRedirect($"/user/info/{id}");
             }
-            return BadRequest("Нет профиля пользователя!");
+            return BadRequest("Editing. Нет профиля пользователя!");
         }
 
-        [HttpGet("{id}")]
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public ActionResult Edit([FromRoute] int id)
         {
             ViewBag.Title = "Профайл";
             var prof = _profileService.GetProfile(id);
             UserProfileDtoView? profView;
-            if (prof != null)
-            {
-                ViewBag.IdUser = id;
-                profView = _mapper.Map<UserProfileDtoView>(prof);
-            }
-            else
-                profView = new UserProfileDtoView();
-
+            if (prof == null) 
+                return BadRequest("Правка. Профиль не найден!");
+            profView = _mapper.Map<UserProfileDtoView>(prof);
+            profView.UserModelId = id;
             return View(profView);
         }
 

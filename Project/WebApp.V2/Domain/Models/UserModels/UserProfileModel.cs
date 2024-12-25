@@ -10,6 +10,7 @@ namespace Domain.Models.UserModels;
     public string? Country { get; private set; } = "";
     public string? City { get; private set; } = "";
     public int? Age { get; private set; } = null;
+    public int UserModelId { set; get; }
     public UserModel? UserModel { get; set; }
 
     public UserProfileModel() { }

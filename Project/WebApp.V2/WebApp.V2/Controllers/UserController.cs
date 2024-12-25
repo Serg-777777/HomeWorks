@@ -30,20 +30,19 @@ public class UserController : Controller
     public ActionResult Authorize(string login, string password)
     {
         var userFullLogic = _userService.Authorize(login, password);
-        
-        if (userFullLogic != null)
+        if (userFullLogic != null )
         {
+            if (userFullLogic.ProfileModel == null) return BadRequest("Авторизация. В пользователе не найден профиль!");
             var userFullView = _mapper.Map<UserFullDtoView>(userFullLogic);
             var profModel = userFullLogic?.ProfileModel;
             var profLogic = _mapper.Map<UserProfileDtoLogic>(profModel);
             var profView = _mapper.Map<UserProfileDtoView>(profLogic);
+            profView.UserModelId = userFullLogic?.Id;
             var obj = new UserInfoDtoView(userFullView, profView);
-            ViewBag.IdUser = userFullLogic?.Id;
             return View("Info", obj);
-            // return  RedirectToAction("Info", id);
-           // return LocalRedirect($"~/user/info/{id}");
+
         }
-        return BadRequest("Пользователь не найден!");
+        return BadRequest("Авторизация. Пользователь не найден!");
     }
 
     public ActionResult Index()
@@ -52,29 +51,29 @@ public class UserController : Controller
         ViewBag.Title = "Форма";
         return View(userDtoApp);
     }
-    [HttpGet]
-    public ActionResult Info(int idUser)
+    [HttpGet("/user/info/{id}")]
+    public ActionResult Info([FromRoute] int id)
     {
-        var userFullLogic = _userService.GetUser(idUser);
+        var userFullLogic = _userService.GetUser(id);
         if(userFullLogic != null)
         {
+            if(userFullLogic.ProfileModel == null) return BadRequest("Инфо. Пользователь не найден!");
             var userFullView = _mapper.Map<UserFullDtoView>(userFullLogic);
-            var profLogic = _mapper.Map<UserProfileDtoLogic>(userFullLogic?.ProfileModel);
+            var prof = userFullLogic?.ProfileModel;
+            var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
             var profView = _mapper.Map<UserProfileDtoView>(profLogic);
+            profView.UserModelId = id; 
             var obj = new UserInfoDtoView(userFullView, profView);
             return View(obj);
         }
-        return BadRequest("Пользователь не найден!");
-
+        return BadRequest("Инфо. Пользователь не найден!");
     }
     [HttpPost]
     public ActionResult Add(UserDtoView userDtoApp)
     {
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
         var userNewModel = _userService.CreateUser(userLogic);
-        _logger.LogInformation($":::TEST ADD::: Id:{userNewModel?.Id}, Login:{userNewModel?.Login},  Email:{userNewModel?.Email},  Role:{userNewModel?.Role?.RoleUser}");
         var id = userNewModel?.Id;
-        ViewBag.IdUser = id;
         return LocalRedirect($"~/user/info/{id}");
     }
 
@@ -87,26 +86,20 @@ public class UserController : Controller
             var userView= _mapper.Map<UserFullDtoView>(userLogic);
             ViewBag.Title = "Правка";
             ViewData["layot"] = "_Master";
-            ViewBag.IdUser = id;
             return View(userView);
         }
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
-    public ActionResult Edit([FromRoute] int id, UserFullDtoView userDtoApp)
+    [HttpPost("/user/editing/{id}")]
+    public ActionResult Editing(int id, [FromForm] UserFullDtoView userDtoView) 
     {
         var u = _userService.GetUser(id);
         if (u != null)
         {
-            _logger.LogInformation($":::TEST::: Role View:{userDtoApp.Role?.RoleUser}");
-
-            var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoApp);
-
-            _logger.LogInformation($":::TEST::: Role Logic:{userDtoApp.Role?.RoleUser}");
-
-            _userService.UpdateUser(id, userLogic);
-            ViewBag.IdUser = id;
+            var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoView);
+            userLogic.Id = id;
+            _userService.UpdateUser(userLogic);
             return LocalRedirect($"~/user/info/{id}");
         }
         return BadRequest($"Пользователь ID: {id} не найден");

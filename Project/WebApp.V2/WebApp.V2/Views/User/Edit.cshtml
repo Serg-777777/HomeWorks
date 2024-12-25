@@ -10,25 +10,25 @@
 <h2>@ViewBag.Title</h2>
 <hr />
 
-<form method="post" action="/user/edit/@dto.Id">
-    <table>
+<form method="post" action="/user/editing/@dto.Id">
+    <table> 
         <tr>
             <td><label class="lblClass">ID: </label></td>
         </tr>
         <tr>
-            <td><input disabled name="Id" type="text" for="@dto.Id" value="@dto.Id" /></td>
+            <td><input disabled name="Id" type="number" asp-for="@dto.Id" value="@dto.Id" /></td>
         </tr>
         <tr>
             <td><label class="lblClass">Логин: </label></td>
         </tr>
         <tr>
-            <td><input disabled name="Login" type="text" for="@dto.Login" value="@dto.Login" /></td>
+            <td><input disabled name="Login" type="text" asp-for="@dto.Login" value="@dto.Login" /></td>
         </tr>
         <tr>
             <td><label class="lblClass">Дата: </label></td>
         </tr>
         <tr>
-            <td><input name="DateCreated" type="text" for="@dto.DateCreated" value="@dto.DateCreated" /></td>
+            <td><input disabled name="DateCreated" type="text" for="@dto.DateCreated" value="@dto.DateCreated" /></td>
         </tr>
         <tr>
             <td><label class="lblClass">Роль: </label></td>

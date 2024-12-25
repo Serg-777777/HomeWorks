@@ -39,8 +39,7 @@
                 <td><input disabled Id="Email-@Model[i].Id" name="Email-@Model[i].Id" asp-for="@Model[i].Email" border="0" type="text" value="@Model[i].Email" /></td>
 
                 <td><a href="/user/delete/@Model[i].Id">активность</a></td>
-                <td><a href="/user/edit/@Model[i].Id">изменить</a></td>
-                <td><a href="/profile/edit/@Model[i].Id">профиль</a></td>
+                <td><a href="/user/info/@Model[i].Id">профиль</a></td>
                 <td><a style="color:crimson" href="/user/erase/@Model[i].Id">удалить</a></td>
             </tr>
         }

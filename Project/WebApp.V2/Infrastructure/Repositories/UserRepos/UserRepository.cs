@@ -1,6 +1,7 @@
 ﻿
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories.UserRepos;
@@ -15,23 +16,17 @@ sealed public class UserRepository : IUserRepository
         _logger = logger;
     }
 
-    public List<UserModel> Entities => _userContext.Users.ToList();
-
+    public List<UserModel> Entities => _userContext.Users.AsNoTracking().ToList();
+    public UserModel? Authorize(string login, string password)
+    {
+        var user = _userContext.Users.Include(p => p.ProfileModel).FirstOrDefault(u => u.Login == login && u.Password == password);
+        return user;
+    }
     public UserModel? AddEntity(UserModel entity)
     {
-        var role = new UserRoleModel() { RoleUser = "гость" };
-        var prof = new UserProfileModel();
-        var user = new UserModel(entity.Login!, entity.Password!, entity.Email!, entity.DateCreated, role);
-       // user.SetProfile(prof);
-        var newUser = _userContext.Users.Add(user).Entity;
-        // _userContext.SaveChanges();
-        
-        prof.SetUserProperty(user);
-        _userContext.Profiles.Add(prof);
+        var newUser = _userContext.Users.Add(entity).Entity;
+        _userContext.Profiles.Add(entity.ProfileModel!);
         _userContext.SaveChanges();
-
-        _logger.LogInformation($":::TEST AddEntity Login:{newUser.Login}, Email:{newUser.Email} Date: {newUser.DateCreated}");
-
         return newUser;
     }
     public UserModel? GetEntity(int userId)
@@ -42,12 +37,10 @@ sealed public class UserRepository : IUserRepository
     public UserModel? UpdateEntity(int userId, UserModel entity)
     {
         var user = this._UserById(userId);
-        _logger.LogInformation($":::TEST REPOS Login:{entity.Login}, Role:{entity.Role?.RoleUser}");
         if (user != null && user.Id == entity.Id)
         {
             user = _userContext.Update(user.SetValues(entity)).Entity;
             _userContext.SaveChanges();
-            _logger.LogInformation($":::TEST Id:{user.Id}, Login:{user.Login}, Email:{user.Email} Date: {user.DateCreated}");
             return user;
         }
         return null!;
@@ -67,7 +60,7 @@ sealed public class UserRepository : IUserRepository
     }
     private UserModel? _UserById(int idUser)
     {
-        var user = _userContext.Users.FirstOrDefault(u => u.Id == idUser);
+        var user = _userContext.Users.Include(u=>u.ProfileModel).FirstOrDefault(u => u.Id == idUser);
         return user;
     }
 
@@ -84,11 +77,5 @@ sealed public class UserRepository : IUserRepository
         _userContext.Users.Remove(u!);
         _userContext.SaveChanges();
         return true;
-    }
-
-    public UserModel? Authorize(string login, string password)
-    {
-        var user = _userContext.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
-        return user;
     }
 }
