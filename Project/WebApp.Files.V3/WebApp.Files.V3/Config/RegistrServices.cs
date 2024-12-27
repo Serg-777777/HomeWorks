@@ -9,16 +9,16 @@ namespace Presentation.Config;
 
 public static class RegistrServices
 {
-    public static IServiceCollection AddRegistrServices(this IServiceCollection serviceProvider, IConfiguration configuration)
+    public static IServiceCollection AddRegistrServices(this IServiceCollection serviceProvider)
     {
         serviceProvider
-            .AddDbContext<FileContext>(p => p.UseSqlite("Data Source=FilesDB.db"))// из конфиг;
-            .AddTransient<IFileRepository, FileRepos>()
-            .AddTransient<IFileLoader<FileModel>, FileLoaderRepos>()
-            .AddTransient<FileService>()
+
+            .AddScoped<IFileRepository, FileRepos>()
+            .AddScoped<IFileLoader<FileModel>, FileLoaderRepos>()
+            .AddScoped<FileService>()
             .AddAutoMapper(typeof(FileMapperProfile))
-            .AddLogging(p => p.AddConsole());
-        
+            .AddLogging(p => p.AddConsole())
+            .AddDbContext<FileContext>();// из конфиг;
         return serviceProvider;
     }
 }

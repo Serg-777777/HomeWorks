@@ -6,6 +6,10 @@ namespace Infrastructure.Context.FilesContexts;
 
 public class FileContext:DbContext
 {
+    public FileContext(DbContextOptions<FileContext> options):base(options)
+    {
+
+    }
     public DbSet<FileModel> FilesLibrary { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

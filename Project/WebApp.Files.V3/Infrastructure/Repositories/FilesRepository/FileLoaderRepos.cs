@@ -20,8 +20,6 @@ public class FileLoaderRepos : IFileLoader<FileModel>
     {
         var path = @$"{_basePath}/{userKey}/{file.FileName}";
 
-        _logger.LogInformation($":::TEST::: Load path: {path}");
-
         if (!Directory.Exists(path))
         {
             using var f = new FileStream(path, FileMode.Create);

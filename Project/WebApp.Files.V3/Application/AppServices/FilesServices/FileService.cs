@@ -21,24 +21,18 @@ public class FileService
         _fileLoader = fileLoader;
         _logger = logger;
     }
-    public bool LoadFile(FileDtoLogic fileDtoLogic, HttpRequest request)
+    public bool LoadFile(string userKey, IFormCollection formCollection)
     {
-        var fileNew = _mapper.Map<FileModel>(fileDtoLogic);
-
-        _logger.LogInformation($":::TEST::: Load Index: {fileNew.Index_UserKey_FileName}");
-
-        FileModel? file = null;
-        foreach (var f in request.Form.Files)
+        
+        foreach (var f in formCollection.Files)
         {
-            file = _filesRepos.GetEntity(fileNew!);
-            if (file == null)
+            var model = new FileModel(userKey, f.Name);
+            model = _filesRepos.GetEntity(model!);
+            if (model == null)
             {
-                var pathFile = _fileLoader.LoadFile(f, fileNew?.UserKey!).Result;
-
-                _logger.LogInformation($":::TEST::: Load pathFile: {pathFile}");
-
-                fileNew?.SetFullPath(pathFile!);
-                _filesRepos.AddEntity(fileNew!);
+                var pathFile = _fileLoader.LoadFile(f, model?.UserKey!).Result;
+                model?.SetFullPath(pathFile!);
+                _filesRepos.AddEntity(model!);
             }
         }
         return true;
@@ -66,11 +60,11 @@ public class FileService
     {
         var fileModel = _mapper.Map<FileModel>(fileDtoLogic);
 
-        _logger.LogInformation($":::TEST::: Service Get Index: {fileModel.Index_UserKey_FileName}");
+        _logger.LogInformation($":::TEST::: Get Index: {fileModel.Index_UserKey_FileName}");
 
         fileModel = _filesRepos.GetEntity(fileModel);
 
-        _logger.LogInformation($":::TEST::: Service Get Path: {fileModel?.FullPath}");
+        _logger.LogInformation($":::TEST::: Get Path: {fileModel?.FullPath}");
 
         return fileModel?.FullPath;
     }

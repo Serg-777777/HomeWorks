@@ -1,12 +1,13 @@
 using Presentation.Config;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRegistrServices(builder.Configuration); //сервисы
+builder.Services.AddRegistrServices(); //сервисы
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 app.UseRouting();
@@ -20,5 +21,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.MapControllerRoute(
+    name:"defaukt",
+    pattern: "{controller=FileLoader}/{action=Index}/{id?}");
 
 app.Run();

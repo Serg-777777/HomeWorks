@@ -10,6 +10,8 @@ namespace Infrastructure.Context.FilesContexts
         {
             builder.HasAlternateKey(p => p.Index_UserKey_FileName).HasName("IndexFiles");
             builder.HasIndex(p => p.Index_UserKey_FileName);
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
         }
     }
 }

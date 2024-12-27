@@ -19,10 +19,10 @@ public class FilesController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(FileDtoView fileDtoView)
+    public ActionResult Add(FileDtoView fileDtoView)
     {
         var fileLogic = _mapper.Map<FileDtoLogic>(fileDtoView);
-        if (_fileService.LoadFile(fileLogic, Request))
+        if (_fileService.LoadFile(fileLogic.UserKey, Request.Form))
             return Ok();
         return BadRequest();
     }
