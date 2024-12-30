@@ -2,7 +2,7 @@
 using AutoMapper;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Mappers.DtoViews.UserDtoViews;
+using Presentation.DtoViews.UserDtoViews;
 
 namespace Presentation.Controllers
 {
@@ -19,18 +19,29 @@ namespace Presentation.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        public ActionResult Editing(UserProfileDtoView dtoView)
+        [HttpGet("/profile/{id}")]
+        public ActionResult Index([FromRoute] int id)
         {
-            int id = (int)dtoView.UserModelId!;
+            ViewBag.Title = "Профиль";
+            var prof = _profileService.GetProfile(id);
+            UserProfileDtoView? profView;
+            if (prof== null)
+                return BadRequest("Правка. Профиль не найден!");
+            profView = _mapper.Map<UserProfileDtoView>(prof);
+            return View(profView);
+        }
+
+        [HttpPost]
+        public ActionResult Editing([FromRoute] int id, [FromForm] UserProfileDtoView dtoView)
+        {
             var profLogic = _profileService.GetProfile(id);
             if (profLogic != null)
             {
                 var dtoLogic = _mapper.Map<UserProfileDtoLogic>(dtoView);
                 var profNew = _profileService.UpdateProfile(id, dtoLogic);
                 var profNewView = _mapper.Map<UserProfileDtoView>(profNew);
-                profNewView.UserModelId = id;
-                return LocalRedirect($"/user/info/{id}");
+           
+                return LocalRedirect($"/profile/{id}");
             }
             return BadRequest("Editing. Нет профиля пользователя!");
         }
@@ -44,7 +55,7 @@ namespace Presentation.Controllers
             if (prof == null) 
                 return BadRequest("Правка. Профиль не найден!");
             profView = _mapper.Map<UserProfileDtoView>(prof);
-            profView.UserModelId = id;
+            profView.UserId = id;
             return View(profView);
         }
 

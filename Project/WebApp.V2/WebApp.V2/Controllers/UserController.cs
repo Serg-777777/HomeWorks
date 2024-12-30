@@ -3,7 +3,7 @@ using Application.ServicesViews.UserServicesApps;
 using AutoMapper;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Mappers.DtoViews.UserDtoViews;
+using Presentation.DtoViews.UserDtoViews;
 
 namespace Presentation.Controllers;
 
@@ -29,20 +29,9 @@ public class UserController : Controller
     [HttpPost]
     public ActionResult Authorize(string login, string password)
     {
-        var userFullLogic = _userService.Authorize(login, password);
-        if (userFullLogic != null )
-        {
-            if (userFullLogic.ProfileModel == null) return BadRequest("Авторизация. В пользователе не найден профиль!");
-            var userFullView = _mapper.Map<UserFullDtoView>(userFullLogic);
-            var profModel = userFullLogic?.ProfileModel;
-            var profLogic = _mapper.Map<UserProfileDtoLogic>(profModel);
-            var profView = _mapper.Map<UserProfileDtoView>(profLogic);
-            profView.UserModelId = userFullLogic?.Id;
-            var obj = new UserInfoDtoView(userFullView, profView);
-            return View("Info", obj);
-
-        }
-        return BadRequest("Авторизация. Пользователь не найден!");
+        var userUnfoLogic = _userService.Authorize(login, password);
+        var userUnfoView = _mapper.Map<UserFullDtoView>(userUnfoLogic);
+        return View("Info", userUnfoView);
     }
 
     public ActionResult Index()
@@ -51,22 +40,12 @@ public class UserController : Controller
         ViewBag.Title = "Форма";
         return View(userDtoApp);
     }
-    [HttpGet("/user/info/{id}")]
+    [HttpGet]
     public ActionResult Info([FromRoute] int id)
     {
-        var userFullLogic = _userService.GetUser(id);
-        if(userFullLogic != null)
-        {
-            if(userFullLogic.ProfileModel == null) return BadRequest("Инфо. Пользователь не найден!");
-            var userFullView = _mapper.Map<UserFullDtoView>(userFullLogic);
-            var prof = userFullLogic?.ProfileModel;
-            var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
-            var profView = _mapper.Map<UserProfileDtoView>(profLogic);
-            profView.UserModelId = id; 
-            var obj = new UserInfoDtoView(userFullView, profView);
-            return View(obj);
-        }
-        return BadRequest("Инфо. Пользователь не найден!");
+        var infoLogic = _userService.Info(id);
+        var infoView = _mapper.Map<UserFullDtoView>(infoLogic);
+        return View(infoView);
     }
     [HttpPost]
     public ActionResult Add(UserDtoView userDtoApp)
@@ -74,7 +53,7 @@ public class UserController : Controller
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
         var userNewModel = _userService.CreateUser(userLogic);
         var id = userNewModel?.Id;
-        return LocalRedirect($"~/user/info/{id}");
+        return LocalRedirect($"~/user/all");
     }
 
     [HttpGet]
@@ -83,7 +62,7 @@ public class UserController : Controller
         var userLogic = _userService.GetUser(id);
         if (userLogic != null)
         {
-            var userView= _mapper.Map<UserFullDtoView>(userLogic);
+            var userView = _mapper.Map<UserFullDtoView>(userLogic);
             ViewBag.Title = "Правка";
             ViewData["layot"] = "_Master";
             return View(userView);
@@ -91,14 +70,13 @@ public class UserController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost("/user/editing/{id}")]
-    public ActionResult Editing(int id, [FromForm] UserFullDtoView userDtoView) 
+    [HttpPost]
+    public ActionResult Editing( int id, UserFullDtoView userDtoView)
     {
-        var u = _userService.GetUser(id);
-        if (u != null)
+        var user = _userService.GetUser(id);
+        if (user != null)
         {
             var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoView);
-            userLogic.Id = id;
             _userService.UpdateUser(userLogic);
             return LocalRedirect($"~/user/info/{id}");
         }

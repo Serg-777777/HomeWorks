@@ -11,9 +11,9 @@ namespace Infrastructure.Contexts.UserContexts.Configs
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Id).ValueGeneratedOnAdd();
             builder
-                .HasOne(p => p.UserModel)
-                .WithOne(p => p.ProfileModel)
-                .HasForeignKey<UserProfileModel>(p => p.UserModelId); 
+                .HasOne(p => p.User)
+                .WithOne(p => p.Profile)
+                .HasForeignKey<UserProfileModel>(p => p.UserId); 
         }
     }
 }

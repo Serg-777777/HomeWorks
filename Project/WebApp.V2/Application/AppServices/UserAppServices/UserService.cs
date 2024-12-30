@@ -23,13 +23,19 @@ public class UserService
     
     public UserFullDtoLogic? Authorize(string login, string password)
     {
-        var u = _userRepository.Authorize(login, password);
-        if(u != null)
+        var user = _userRepository.Authorize(login, password);
+        if(user != null)
         {
-            var uLogic = _mapper.Map<UserFullDtoLogic>(u);
+            var uLogic = _mapper.Map<UserFullDtoLogic>(user);
             return uLogic;
         }
         return null;
+    }
+    public UserFullDtoLogic? Info(int id)
+    {
+        var user = _userRepository.GetEntity(id);
+        var uLogic = _mapper.Map<UserFullDtoLogic>(user);
+        return uLogic;
     }
     public List<UserFullDtoLogic> GetUsers()
     {
@@ -41,7 +47,7 @@ public class UserService
     public UserFullDtoLogic? CreateUser(UserDtoLogic userDtoLogic)
     {
         var userModel = _mapper.Map<UserModel>(userDtoLogic);
-        var role = new UserRoleModel() { RoleUser = "гость" };
+        var role = new UserRoleModel() { RoleName = "гость" };
         var prof = new UserProfileModel();
         userModel
             .SetDateCreated(DateTime.Now)
@@ -52,7 +58,7 @@ public class UserService
         if (newUser != null)
         {
             var newUserLogic = _mapper.Map<UserFullDtoLogic>(newUser);
-           // newUserLogic.ProfileModel = userModel.ProfileModel;
+           // newUserLogic.Profile = userModel.Profile;
             return newUserLogic!;
         }
         return null;
@@ -68,10 +74,12 @@ public class UserService
         }
         return null;
     }
+    
 
     public UserFullDtoLogic? UpdateUser(UserFullDtoLogic newUser)
     {
             var userModel = _mapper.Map<UserModel>(newUser);
+
             var u = _userRepository.UpdateEntity(newUser.Id, userModel);
             var userLogic = _mapper.Map<UserFullDtoLogic> (u);
             return userLogic;

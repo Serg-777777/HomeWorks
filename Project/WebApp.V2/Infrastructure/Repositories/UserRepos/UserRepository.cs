@@ -19,13 +19,13 @@ sealed public class UserRepository : IUserRepository
     public List<UserModel> Entities => _userContext.Users.AsNoTracking().ToList();
     public UserModel? Authorize(string login, string password)
     {
-        var user = _userContext.Users.Include(p => p.ProfileModel).FirstOrDefault(u => u.Login == login && u.Password == password);
+        var user = _userContext.Users.Include(p => p.Profile).FirstOrDefault(u => u.Login == login && u.Password == password);
         return user;
     }
     public UserModel? AddEntity(UserModel entity)
     {
         var newUser = _userContext.Users.Add(entity).Entity;
-        _userContext.Profiles.Add(entity.ProfileModel!);
+        _userContext.Profiles.Add(entity.Profile!);
         _userContext.SaveChanges();
         return newUser;
     }
@@ -60,7 +60,7 @@ sealed public class UserRepository : IUserRepository
     }
     private UserModel? _UserById(int idUser)
     {
-        var user = _userContext.Users.Include(u=>u.ProfileModel).FirstOrDefault(u => u.Id == idUser);
+        var user = _userContext.Users.Include(u=>u.Profile).FirstOrDefault(u => u.Id == idUser);
         return user;
     }
 

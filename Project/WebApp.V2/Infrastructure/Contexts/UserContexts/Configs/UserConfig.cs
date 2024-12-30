@@ -13,8 +13,8 @@ namespace Infrastructure.Contexts.UserContexts.Configs
             builder.Property(p => p.Id).ValueGeneratedOnAdd();
             builder.HasAlternateKey(p=>p.Login);
             builder
-                .HasOne(p => p.ProfileModel)
-                .WithOne(p => p.UserModel)
+                .HasOne(p => p.Profile)
+                .WithOne(p => p.User)
                 .HasForeignKey<UserModel>(p => p.Id); 
         }
     }

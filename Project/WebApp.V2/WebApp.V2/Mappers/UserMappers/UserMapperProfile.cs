@@ -2,8 +2,7 @@
 using AutoMapper;
 using Domain.Models.UserModels;
 using Infrastructure.DtoLogics.UserDtoLogics;
-using Presentation.Mappers.DtoViews.UserDtoViews;
-
+using Presentation.DtoViews.UserDtoViews;
 
 namespace Application.ServicesViews.Mappers.UserMappers;
 
@@ -21,5 +20,8 @@ public class UserMapperProfile : Profile
 
         CreateMap<UserProfileModel, UserProfileDtoLogic>().ReverseMap();
         CreateMap<UserProfileDtoLogic, UserProfileDtoView>().ReverseMap();
+
+        CreateMap<UserRoleModel, RoleDtoLogic>().ReverseMap();
+        CreateMap<RoleDtoLogic, RoleDtoView>().ReverseMap();
     }
 }

@@ -1,4 +1,4 @@
-﻿@using Presentation.Mappers.DtoViews.UserDtoViews
+﻿@using Presentation.DtoViews.UserDtoViews
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using System.ComponentModel.DataAnnotations
 @model List<UserFullDtoView>
@@ -35,11 +35,12 @@
                 <td><input disabled Id="Id-@Model[i].Id" name="Id-@Model[i].Id" asp-for="@Model[i].Id" border="0" type="datetime" value="@Model[i].Id" /></td>
                 <td><input disabled Id="Login-@Model[i].Id" name="Login-@Model[i].Id" asp-for="@Model[i].Login" border="0" type="text" value="@Model[i].Login" /></td>
                 <td><input disabled Id="DateCreated-@Model[i].Id" name="DateCreated-@Model[i].Id" asp-for="@Model[i].DateCreated" border="0" type="text" value="@Model[i].DateCreated" /></td>
-                <td><input disabled Id="RoleUser-@Model[i].Id" name="RoleUser-@Model[i].Id" asp-for="@Model[i].Role?.RoleUser" border="0" type="text" value="@Model[i].Role?.RoleUser" /></td>
+                <td><input disabled Id="Role-@Model[i].Id" name="Role-@Model[i].Id" asp-for="@Model[i].Role!.RoleName" border="0" type="text" value="@Model[i].Role!.RoleName" /></td>
                 <td><input disabled Id="Email-@Model[i].Id" name="Email-@Model[i].Id" asp-for="@Model[i].Email" border="0" type="text" value="@Model[i].Email" /></td>
 
                 <td><a href="/user/delete/@Model[i].Id">активность</a></td>
-                <td><a href="/user/info/@Model[i].Id">профиль</a></td>
+                <td><a href="/user/info/@Model[i].Id">аккаунт</a></td>
+                <td><a href="/profile/@Model[i].Id">профиль</a></td>
                 <td><a style="color:crimson" href="/user/erase/@Model[i].Id">удалить</a></td>
             </tr>
         }

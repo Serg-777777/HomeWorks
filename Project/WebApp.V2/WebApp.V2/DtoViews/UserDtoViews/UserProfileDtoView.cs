@@ -1,4 +1,4 @@
-﻿namespace Presentation.Mappers.DtoViews.UserDtoViews;
+﻿namespace Presentation.DtoViews.UserDtoViews;
 
 public class UserProfileDtoView : IUserDtoView
 {
@@ -7,5 +7,5 @@ public class UserProfileDtoView : IUserDtoView
     public string? Country { get; set; }
     public string? City { get; set; }
     public int? Age { get; set; }
-    public int? UserModelId { get; set; }
+    public int? UserId { get; set; }
 }

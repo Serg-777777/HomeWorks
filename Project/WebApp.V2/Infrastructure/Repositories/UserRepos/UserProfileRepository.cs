@@ -20,16 +20,16 @@ namespace Infrastructure.Repositories.UserRepos
            var prof = _context.Profiles.Add(entity).Entity;
             return prof;
         }
-
+        
         public UserProfileModel? GetEntity(int idUser)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserModel!.Id == idUser);
+            var prof = _context.Profiles.FirstOrDefault(p => p.UserId == idUser);
             return prof;
         }
 
         public bool RemoveEntity(int idUser)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserModel!.Id == idUser);
+            var prof = _context.Profiles.FirstOrDefault(p => p.User!.Id == idUser);
             if(prof!=null)
             {
                 var res = _context.Profiles.Remove(prof);
@@ -41,7 +41,7 @@ namespace Infrastructure.Repositories.UserRepos
 
         public UserProfileModel? UpdateEntity(int idUser, UserProfileModel entity)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserModel!.Id == idUser);
+            var prof = _context.Profiles.FirstOrDefault(p => p.User!.Id == idUser);
             if (prof != null)
             {
                 prof.SetValues(entity);

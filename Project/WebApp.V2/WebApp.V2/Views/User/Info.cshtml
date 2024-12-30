@@ -1,17 +1,28 @@
-﻿@using Presentation.Mappers.DtoViews.UserDtoViews
-@model UserInfoDtoView
+﻿@using Presentation.DtoViews.UserDtoViews
+@model UserFullDtoView
 @{
+    var obj = Model as UserFullDtoView;
     Layout = "_Master";
 }
-@{
-    var account = Model.Account as UserFullDtoView;
-    var profile = Model.Profile as UserProfileDtoView;
-}
-
-@{
-    await Html.RenderPartialAsync("_Account", account);
-}
-<br /> 
-@{
-    await Html.RenderPartialAsync("_Profile", profile);
-}
+<h3>Аккаунт</h3>
+<div><a href="/user/edit/@obj.Id">изменить</a></div>
+<br />
+<table>
+    <tr>
+        <td><label>Логин: </label></td>
+        <td><span>@obj.Login</span></td>
+    </tr>
+    <tr>
+        <td><label>Добавлен: </label></td>
+        <td><span>@obj.DateCreated</span></td>
+    </tr>
+    <tr>
+        <td><label>Почта: </label></td>
+        <td><span>@obj.Email</span></td>
+    </tr>
+    <tr>
+        <td><label>Роль: </label></td>
+        <td><span>@obj.Role?.RoleName</span></td>
+    </tr>
+</table>
+<br />

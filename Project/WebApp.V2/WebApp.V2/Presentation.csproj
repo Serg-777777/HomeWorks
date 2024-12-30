@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Views\User\_Profile.cshtml" />
-  </ItemGroup>
-
 </Project>
