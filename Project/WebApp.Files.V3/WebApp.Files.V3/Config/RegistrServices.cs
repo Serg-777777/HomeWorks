@@ -1,9 +1,8 @@
-﻿using Application.AppServices.FilesServices;
-using Domain.Models.Files;
-using Infrastructure.Context.FilesContexts;
-using Infrastructure.Repositories.FilesRepos;
-using Microsoft.EntityFrameworkCore;
-using Presentation.Mapping.MappingProfiles;
+﻿
+using Application.AppServices.FilesServices;
+using Domain.Models;
+using Infrastructure.Repositories;
+using Microsoft.Extensions.FileProviders;
 
 namespace Presentation.Config;
 
@@ -12,13 +11,8 @@ public static class RegistrServices
     public static IServiceCollection AddRegistrServices(this IServiceCollection serviceProvider)
     {
         serviceProvider
-
-            .AddScoped<IFileRepository, FileRepos>()
-            .AddScoped<IFileLoader<FileModel>, FileLoaderRepos>()
-            .AddScoped<FileService>()
-            .AddAutoMapper(typeof(FileMapperProfile))
-            .AddLogging(p => p.AddConsole())
-            .AddDbContext<FileContext>();// из конфиг;
+            .AddScoped<ILoader<IFormFile, IFileInfo>, FilesLoader>()
+            .AddScoped<IFileService, FileService>();
         return serviceProvider;
     }
 }

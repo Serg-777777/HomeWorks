@@ -1,0 +1,18 @@
+﻿@using Presentation.Dto;
+@model FilesDtoView
+@{
+    Context.Request.Headers.Add("user-kye", "login111");
+}
+<h2>Loader</</h2>
+<hr />
+
+@using (Html.BeginForm("Upload", "Files", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="upfile" multiple />
+    <button type="submit">загрузить</button>
+}
+<hr />
+<h3>Загрузить файл "see.jpg"</h3>
+<div><a href="/api/files/see.jpg">посмотреть файл имя - see.jpg</a></div><br />
+<div><a href="/api/files/attach/see.jpg">вложение имя - see.jpg</a></div>
+<br>

@@ -1,71 +1,36 @@
-﻿using AutoMapper;
-using Domain.Models.Files;
-using Application.Mapping.DtoLogics.FileDtoLogics;
+﻿using Domain.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.FileProviders;
 
 
 namespace Application.AppServices.FilesServices;
 
-public class FileService
+public class FileService:IFileService
 {
-    IFileRepository _filesRepos;
-    IMapper _mapper;
-    IFileLoader<FileModel> _fileLoader;
-    ILogger<FileService> _logger;
-    public FileService(IFileRepository filesRepository, IFileLoader<FileModel> fileLoader, 
-        IMapper mapper, ILogger<FileService> logger)
+    private readonly ILoader<IFormFile, IFileInfo> _loader;
+    public FileService(ILoader<IFormFile, IFileInfo> loader)
     {
-        _filesRepos = filesRepository;
-        _mapper = mapper;
-        _fileLoader = fileLoader;
-        _logger = logger;
+        _loader = loader;
     }
-    public bool LoadFile(string userKey, IFormCollection formCollection)
+    public IFileInfo? DownloadFile(string fileName, string userKey)
     {
-        
+        var file = _loader.Download(fileName, userKey);
+        return file;
+    }
+    public bool UploadFile(IFormCollection formCollection, string userKey)
+    {
+        bool res = false;
         foreach (var f in formCollection.Files)
         {
-            var model = new FileModel(userKey, f.Name);
-            model = _filesRepos.GetEntity(model!);
-            if (model == null)
-            {
-                var pathFile = _fileLoader.LoadFile(f, model?.UserKey!).Result;
-                model?.SetFullPath(pathFile!);
-                _filesRepos.AddEntity(model!);
-            }
-        }
-        return true;
-    }
-
-    public bool DeleteFile(FileDtoLogic fileDtoLogic)
-    {
-        var fileModel = _mapper.Map<FileModel>(fileDtoLogic);
-
-        _logger.LogInformation($":::TEST::: Delete Index: {fileModel.Index_UserKey_FileName}");
-
-        fileModel = _filesRepos.GetEntity(fileModel);
-        var res = false;
-        if (fileModel != null)
-        {
-            res = _fileLoader.DeleteFile(fileModel);
-            if (res)
-                res = _filesRepos.DeleteEntity(fileModel);
-            return res;
+            res = _loader.Upload(f, userKey);
         }
         return res;
     }
 
-    public string? GetFilePath(FileDtoLogic fileDtoLogic)
+    public bool DeleteFile(string fileName, string userKey)
     {
-        var fileModel = _mapper.Map<FileModel>(fileDtoLogic);
-
-        _logger.LogInformation($":::TEST::: Get Index: {fileModel.Index_UserKey_FileName}");
-
-        fileModel = _filesRepos.GetEntity(fileModel);
-
-        _logger.LogInformation($":::TEST::: Get Path: {fileModel?.FullPath}");
-
-        return fileModel?.FullPath;
+        var res = _loader.Delete(fileName,userKey);
+        return res;
     }
+
 }

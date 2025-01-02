@@ -1,63 +1,65 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.AppServices.FilesServices;
-using Presentation.Mapping.DtoViews.FileDtoViews;
-using AutoMapper;
-using Application.Mapping.DtoLogics.FileDtoLogics;
 
+using Presentation.Dto;
 namespace Presentation.Controllers.Api;
 
 [Route("api/[controller]")]
 [ApiController]
 public class FilesController : ControllerBase
 {
-    FileService _fileService;
-    IMapper _mapper;
-    public FilesController(FileService fileService, IMapper mapper)
+    IFileService _fileService;
+    string? _uKey = null; //TESTING
+    public FilesController(IFileService fileService)
     {
         _fileService = fileService;
-        _mapper = mapper;
+        //_uKey = Request.Headers["user-kye"].First()!; //ОШИБКА
+        if (_uKey == null) 
+            _uKey = "test-login";
     }
 
     [HttpPost]
-    public ActionResult Add(FileDtoView fileDtoView)
+    public ActionResult Upload(IFormCollection upfile)
     {
-        var fileLogic = _mapper.Map<FileDtoLogic>(fileDtoView);
-        if (_fileService.LoadFile(fileLogic.UserKey, Request.Form))
-            return Ok();
-        return BadRequest();
-    }
-
-    [HttpDelete]
-    public ActionResult Delete(FileDtoView fileDtoView)
-    {
-        var fileDtoLog = _mapper.Map<FileDtoLogic>(fileDtoView);
-        if (_fileService.DeleteFile(fileDtoLog))
-            return Ok();
-        return BadRequest();
-    }
-
-    [HttpGet]
-    public async Task<ActionResult> GetFille(FileDtoView fileDtoView)
-    {
-        var fileDtoLog = _mapper.Map<FileDtoLogic>(fileDtoView);
-        var filePath = _fileService.GetFilePath(fileDtoLog);
-        if (filePath != null)
+        if (_uKey !=default)
         {
-            await Response.SendFileAsync(filePath!);
+           var res =  _fileService.UploadFile(upfile, _uKey!);
+            var fileDto = new FilesDtoView(upfile.Files[0].FileName);
+            return RedirectToAction("Index","FileHtml");
+        }
+        return BadRequest("Bad Request");
+    }
+
+    [HttpDelete("{fileName}")]
+    public ActionResult Delete(string fileName)
+    {
+        _fileService.DeleteFile(fileName, _uKey!);
+        return Ok();
+    }
+
+    [HttpGet("{fileName}")]
+    public async Task<ActionResult> GetFille(string fileName)
+    {
+        if (String.IsNullOrEmpty(_uKey)) return BadRequest();
+
+        var f = _fileService.DownloadFile(fileName, _uKey!);
+        if (f != null)
+        {
+            await Response.SendFileAsync(f.PhysicalPath!);
+            // return File(f.PhysicalPath!, "application/octet-stream"); 
         }
         return NotFound();
     }
-
-    [HttpGet]
-    public async Task<ActionResult> GetFilleAttach(FileDtoView fileDtoView)
+    
+    [HttpGet("attach/{fileName}")]
+    public async Task<ActionResult> GetAttach(string fileName)
     {
-        var fileDtoLog = _mapper.Map<FileDtoLogic>(fileDtoView);
-        var filePath = _fileService.GetFilePath(fileDtoLog);
-        if (filePath != null)
+        if (_uKey != null)
         {
             Response.Headers.ContentDisposition = "attachment";
-            await Response.SendFileAsync(filePath!);
+            await Response.SendFileAsync(_uKey!);
         }
         return NotFound();
     }
+    
 }
