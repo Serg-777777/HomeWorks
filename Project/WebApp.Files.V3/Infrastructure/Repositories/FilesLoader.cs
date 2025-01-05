@@ -13,6 +13,7 @@ namespace Infrastructure.Repositories
         public FilesLoader()
         {
             _basePath = Path.Combine(Directory.GetCurrentDirectory(),"client-files");
+            if (!Directory.Exists(_basePath)) Directory.CreateDirectory(_basePath);
         }
 
         public bool Upload(IFormFile fileForm, string userKey)
