@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
 
         public FilesLoader()
         {
-            _basePath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot");
+            _basePath = Path.Combine(Directory.GetCurrentDirectory(),"client-files");
         }
 
         public bool Upload(IFormFile fileForm, string userKey)
