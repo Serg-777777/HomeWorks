@@ -1,6 +1,9 @@
-﻿@{
-    Layout = "_Master";
+﻿@using Microsoft.AspNetCore.Mvc
+
+@{
+    Layout = ViewBag.Layout;
 }
+
 <form method="post" action="/user/authorize">
     <table>
         <tr>
@@ -14,4 +17,3 @@
     </table><br>
     <button type="submit">отправить</button>
 </form>
-

@@ -1,9 +1,6 @@
-﻿using Domain.Models;
-using Application.DtoLogics;
+﻿
 using AutoMapper;
-using Infrastructure.Contexts.UserContexts;
 using Domain.Models.UserModels;
-using Microsoft.Extensions.Logging;
 using Infrastructure.DtoLogics.UserDtoLogics;
 
 namespace Application.AppServices.UserAppServices
@@ -12,13 +9,11 @@ namespace Application.AppServices.UserAppServices
     {
         private IMapper _mapper;
         private IUserProfileRepository _profileRepository;
-        private ILogger<UserProfileService> _logger;
 
-        public UserProfileService(IUserProfileRepository profileRepository, IMapper mapper, ILogger<UserProfileService> logger)
+        public UserProfileService(IUserProfileRepository profileRepository, IMapper mapper)
         {
             _mapper = mapper;
             _profileRepository = profileRepository;
-            _logger = logger;
         }
 
         public UserProfileDtoLogic? GetProfile(int idUser)

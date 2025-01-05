@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.AppServices.FilesServices;
-
 using Presentation.Dto;
 namespace Presentation.Controllers.Api;
 
@@ -9,19 +8,18 @@ namespace Presentation.Controllers.Api;
 public class FilesController : ControllerBase
 {
     IFileService _fileService;
-    string? _uKey = null; //TESTING
+    string _keyName;
     public FilesController(IFileService fileService)
     {
         _fileService = fileService;
-        //_uKey = Request.Headers["user-kye"].First()!; //ОШИБКА
-        if (_uKey == null) 
-            _uKey = "test-login";
+        _keyName = "userkey";
     }
 
     [HttpPost]
     public ActionResult Upload(IFormCollection upfile)
     {
-        if (_uKey !=default)
+        var _uKey = upfile[_keyName];
+        if (!String.IsNullOrEmpty(_uKey))
         {
            var res =  _fileService.UploadFile(upfile, _uKey!);
             var fileDto = new FilesDtoView(upfile.Files[0].FileName);
@@ -30,36 +28,46 @@ public class FilesController : ControllerBase
         return BadRequest("Bad Request");
     }
 
-    [HttpDelete("{fileName}")]
-    public ActionResult Delete(string fileName)
+    [HttpGet("all/{userKey}")]
+    public ActionResult<List<string>?> All(string userKey)
     {
-        _fileService.DeleteFile(fileName, _uKey!);
-        return Ok();
+        var files = _fileService.GetFiles(userKey);
+        //return files;
+        return LocalRedirect($"/filehtml/all?userkey={userKey}");
+    }
+    [HttpGet("delete/{userkey}")]
+    public ActionResult Delete([FromRoute] string userkey, [FromQuery] string fileName)
+    {
+        _fileService.DeleteFile(fileName, userkey!);
+        return LocalRedirect($"/filehtml/all?userkey={userkey}");
     }
 
-    [HttpGet("{fileName}")]
-    public async Task<ActionResult> GetFille(string fileName)
+    [HttpGet("{userkey}")]
+    public async Task<ActionResult> GetFille([FromRoute] string userkey, [FromQuery] string fileName)
     {
-        if (String.IsNullOrEmpty(_uKey)) return BadRequest();
+        if (String.IsNullOrEmpty(userkey)) return BadRequest();
 
-        var f = _fileService.DownloadFile(fileName, _uKey!);
+        var f = _fileService.DownloadFile(fileName, userkey!);
         if (f != null)
         {
-            await Response.SendFileAsync(f.PhysicalPath!);
-            // return File(f.PhysicalPath!, "application/octet-stream"); 
+            await Response.SendFileAsync(f);
+            return NoContent();
         }
         return NotFound();
     }
     
-    [HttpGet("attach/{fileName}")]
-    public async Task<ActionResult> GetAttach(string fileName)
+    [HttpGet("attach/{userkey}")]
+    public ActionResult GetAttach([FromRoute] string userkey, [FromQuery] string fileName)
     {
-        if (_uKey != null)
+        if (userkey != null)
         {
-            Response.Headers.ContentDisposition = "attachment";
-            await Response.SendFileAsync(_uKey!);
+            var f = _fileService.DownloadFile(fileName, userkey!);
+            if (f != null)
+            {
+                //Response.Headers.ContentDisposition = "attachment";
+                return PhysicalFile(f.PhysicalPath!, "application/octet-stream",f.Name);
+            }
         }
         return NotFound();
     }
-    
 }

@@ -32,5 +32,15 @@ public class FileService:IFileService
         var res = _loader.Delete(fileName,userKey);
         return res;
     }
-
+    public List<string>? GetFiles(string userKey)
+    {
+        var fs = new List<string>(); 
+        var fis = _loader.Files(userKey);
+        if(fis != null)
+            foreach (var f in fis)
+            {
+                fs.Add(f.Name);
+            }
+        return fs;
+    }
 }

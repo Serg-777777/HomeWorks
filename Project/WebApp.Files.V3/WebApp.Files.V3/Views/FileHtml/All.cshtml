@@ -1,0 +1,19 @@
+﻿@model List<string>
+@{
+    var uKey = "test-login";
+}
+<br>
+    <div><a href="/filehtml/index"><span><<< Загрузить</span></a></div><br />
+    <h2>Файлы</h2>
+<hr />
+
+@foreach(var f in Model)
+{
+    <a href="/api/files/@uKey?fileName=@f"><img src="/api/files/attach/@uKey?fileName=@f" style="height:50px; width:50px" /></a>
+    <h3>@f</h3>
+    <div><a href="/api/files/@uKey?fileName=@f">посмотреть </a></div>
+    <div><a href="/api/files/attach/@uKey?fileName=@f">скачать </a></div>
+    <div><a href="/api/files/delete/@uKey?fileName=@f">удалить </a></div>
+    <br />
+<br />
+}

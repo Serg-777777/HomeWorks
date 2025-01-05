@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Models.UserModels;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Infrastructure.Repositories.UserRepos;
-using Microsoft.Extensions.Logging;
 
 namespace Application.ServicesViews.UserServicesApps;
 
@@ -13,12 +12,10 @@ public class UserService
 {
     IUserRepository _userRepository;
     IMapper _mapper;
-    ILogger<UserService> _logger;
-    public UserService(IUserRepository userRepository, IMapper mapper, ILogger<UserService> logger)
+    public UserService(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
         _mapper = mapper;
-        _logger = logger;
     }
     
     public UserFullDtoLogic? Authorize(string login, string password)
@@ -58,7 +55,6 @@ public class UserService
         if (newUser != null)
         {
             var newUserLogic = _mapper.Map<UserFullDtoLogic>(newUser);
-           // newUserLogic.Profile = userModel.Profile;
             return newUserLogic!;
         }
         return null;
@@ -74,12 +70,10 @@ public class UserService
         }
         return null;
     }
-    
 
     public UserFullDtoLogic? UpdateUser(UserFullDtoLogic newUser)
     {
             var userModel = _mapper.Map<UserModel>(newUser);
-
             var u = _userRepository.UpdateEntity(newUser.Id, userModel);
             var userLogic = _mapper.Map<UserFullDtoLogic> (u);
             return userLogic;

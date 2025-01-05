@@ -9,11 +9,9 @@ namespace Infrastructure.Repositories.UserRepos;
 sealed public class UserRepository : IUserRepository
 {
     UserContext _userContext = default!;
-    ILogger<UserRepository> _logger;
-    public UserRepository(UserContext userContext, ILogger<UserRepository> logger)
+    public UserRepository(UserContext userContext)
     {
         _userContext = userContext;
-        _logger = logger;
     }
 
     public List<UserModel> Entities => _userContext.Users.AsNoTracking().ToList();
@@ -29,17 +27,17 @@ sealed public class UserRepository : IUserRepository
         _userContext.SaveChanges();
         return newUser;
     }
-    public UserModel? GetEntity(int userId)
+    public UserModel? GetEntity(int idUser)
     {
-        var user = this._UserById(userId);
+        var user = _userContext.Users.Include(u => u.Profile).FirstOrDefault(u => u.Id == idUser);
         return user;
     }
     public UserModel? UpdateEntity(int userId, UserModel entity)
     {
-        var user = this._UserById(userId);
-        if (user != null && user.Id == entity.Id)
+        var user = GetEntity(userId);
+        if (user != null)
         {
-            user = _userContext.Update(user.SetValues(entity)).Entity;
+            user = _userContext.Update(user.SetEditValues(entity)).Entity;
             _userContext.SaveChanges();
             return user;
         }
@@ -47,23 +45,16 @@ sealed public class UserRepository : IUserRepository
     }
     public bool RemoveEntity(int userId)
     {
-        var user = this._UserById(userId);
+        var user = GetEntity(userId);
         if (user != null)
         {
             user.SetIsDelete(!user.IsDeleted);
-
             _userContext.Users.Update(user);
             _userContext.SaveChanges();
             return true;
         }
         return false;
     }
-    private UserModel? _UserById(int idUser)
-    {
-        var user = _userContext.Users.Include(u=>u.Profile).FirstOrDefault(u => u.Id == idUser);
-        return user;
-    }
-
     public bool UpdateEntityRange(List<UserModel> userModels)
     {
         _userContext.Users.UpdateRange(userModels);
@@ -73,7 +64,7 @@ sealed public class UserRepository : IUserRepository
 
     public bool EraseEntity(int idUser)
     {
-        var u = _UserById(idUser);
+        var u = GetEntity(idUser);
         _userContext.Users.Remove(u!);
         _userContext.SaveChanges();
         return true;

@@ -2,7 +2,7 @@
 
 namespace Domain.Models.UserModels;
 
- public class UserModel : IEntity
+public class UserModel : IEntity
 {
 
     public int Id { get; set; }
@@ -28,13 +28,12 @@ namespace Domain.Models.UserModels;
         Profile = userProfileModel;
         return this;
     }
-    public UserModel SetValues(UserModel entity)
+    public UserModel SetEditValues(UserModel entity)
     {
-       // Login = entity.Login;
-        Email = entity.Email;
-        Password = entity.Password;
-        Role= entity.Role;
-        Profile = entity.Profile;
+        // Login = entity.Login; проверка на уникальность
+        if (!String.IsNullOrEmpty(Email)) Email = entity.Email;
+        if (!String.IsNullOrEmpty(Password)) Password = entity.Password;
+        if (entity.Role != null) Role = entity.Role;
 
         return this;
     }
@@ -57,5 +56,5 @@ namespace Domain.Models.UserModels;
     {
         return (this.Id == other?.Id);
     }
-  
+
 }

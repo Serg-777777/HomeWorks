@@ -3,7 +3,6 @@ using AutoMapper;
 using Domain.Models.UserModels;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Presentation.DtoViews.UserDtoViews;
-
 namespace Application.ServicesViews.Mappers.UserMappers;
 
 public class UserMapperProfile : Profile
@@ -23,5 +22,10 @@ public class UserMapperProfile : Profile
 
         CreateMap<UserRoleModel, RoleDtoLogic>().ReverseMap();
         CreateMap<RoleDtoLogic, RoleDtoView>().ReverseMap();
+
+        CreateMap<UserModel, UserEditDtoLogic>().ReverseMap();
+        CreateMap<UserEditDtoLogic, UserEditDtoView>().ReverseMap();
+
+        CreateMap<UserFullDtoLogic, UserEditDtoView>().ReverseMap();
     }
 }

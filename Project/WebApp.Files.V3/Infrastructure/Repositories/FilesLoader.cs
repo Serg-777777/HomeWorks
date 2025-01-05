@@ -17,12 +17,28 @@ namespace Infrastructure.Repositories
 
         public bool Upload(IFormFile fileForm, string userKey)
         {
-            var path = _PathCombinate(fileForm.FileName, userKey, true);
+            var path = _PathFileInitialize(fileForm.FileName, userKey, true);
             using (var stream = new FileStream(path, FileMode.OpenOrCreate))
             {
                 fileForm.CopyTo(stream);
             }
             return true;
+        }
+
+        public List<FileInfo>? Files(string userKey)
+        {
+            var files = new List<FileInfo>();
+            var path = Path.Combine(_basePath, userKey);
+            if(Directory.Exists(path))
+            {
+                var fs = Directory.GetFiles(path);
+                foreach(var f in fs)
+                {
+                    var fi = new FileInfo(f);
+                    files.Add(fi);
+                }    
+            }
+            return files;
         }
         public IFileInfo? Download(string fileName, string userKey)
         {
@@ -38,15 +54,15 @@ namespace Infrastructure.Repositories
         }
         public bool Delete(string fileName, string userKey)
         {
-            var path = _PathCombinate(fileName, userKey);
+            var path = _PathFileInitialize(fileName, userKey);
             if(path != null)
             {
-                Directory.Delete(path);
+                File.Delete(path);
                 return true;
             }
             return false;
         }
-        private string _PathCombinate(string fileName, string userKey, bool toAdd = false)
+        private string _PathFileInitialize(string fileName, string userKey, bool toAdd = false)
         {
             var path = Path.Combine(_basePath, userKey);
             if (toAdd = true && !Directory.Exists(path))
@@ -54,7 +70,5 @@ namespace Infrastructure.Repositories
             path = Path.Combine(path, fileName);
             return path;
         }
-
-     
     }
 }

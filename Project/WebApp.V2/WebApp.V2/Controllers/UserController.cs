@@ -31,6 +31,7 @@ public class UserController : Controller
     {
         var userUnfoLogic = _userService.Authorize(login, password);
         var userUnfoView = _mapper.Map<UserFullDtoView>(userUnfoLogic);
+        ViewBag.Layout = "_Master";
         return View("Info", userUnfoView);
     }
 
@@ -62,7 +63,7 @@ public class UserController : Controller
         var userLogic = _userService.GetUser(id);
         if (userLogic != null)
         {
-            var userView = _mapper.Map<UserFullDtoView>(userLogic);
+            var userView = _mapper.Map<UserEditDtoView>(userLogic);
             ViewBag.Title = "Правка";
             ViewData["layot"] = "_Master";
             return View(userView);
@@ -71,16 +72,16 @@ public class UserController : Controller
     }
 
     [HttpPost]
-    public ActionResult Editing( int id, UserFullDtoView userDtoView)
+    public ActionResult Editing([FromForm] UserEditDtoView userDtoView)
     {
-        var user = _userService.GetUser(id);
+        var user = _userService.GetUser(userDtoView.Id);
         if (user != null)
         {
             var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoView);
             _userService.UpdateUser(userLogic);
-            return LocalRedirect($"~/user/info/{id}");
+            return LocalRedirect($"~/user/info/{userDtoView.Id}");
         }
-        return BadRequest($"Пользователь ID: {id} не найден");
+        return BadRequest($"Пользователь не найден");
     }
     [HttpGet]
     public ActionResult Delete([FromRoute] int id)

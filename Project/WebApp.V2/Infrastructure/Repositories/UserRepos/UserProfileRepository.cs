@@ -12,7 +12,6 @@ namespace Infrastructure.Repositories.UserRepos
         {
             _context = context;
         }
-
         public List<UserProfileModel> Entities => _context.Profiles.ToList();
 
         public UserProfileModel? AddEntity(UserProfileModel entity)

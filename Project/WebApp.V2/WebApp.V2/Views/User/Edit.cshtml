@@ -1,11 +1,11 @@
 ﻿@using Presentation.DtoViews.UserDtoViews
 @using Microsoft.AspNetCore.Mvc
 
-@model UserFullDtoView
+@model UserEditDtoView
 @{
     Layout = ViewData["layot"] as string;
 }
-<form method="post" action="/user/editing/@Model.Id" >
+<form method="post" action="/user/editing" >
     <input hidden name="Id" type="number" asp-for="@Model.Id" value="@Model.Id" />
     <table>
         <tr>
@@ -13,12 +13,6 @@
         </tr>
         <tr>
             <td><input disabled name="Login" type="text" asp-for="@Model.Login" value="@Model.Login" /></td>
-        </tr>
-        <tr>
-            <td><label class="lblClass">Дата: </label></td>
-        </tr>
-        <tr>
-            <td><input disabled name="DateCreated" type="text" asp-for="@Model.DateCreated" value="@Model.DateCreated" /></td>
         </tr>
         <tr>
             <td><label class="lblClass">Роль: </label></td>
