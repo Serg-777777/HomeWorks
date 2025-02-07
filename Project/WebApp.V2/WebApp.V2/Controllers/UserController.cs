@@ -4,6 +4,7 @@ using AutoMapper;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DtoViews.UserDtoViews;
+using Application.Validation;
 
 namespace Presentation.Controllers;
 
@@ -12,11 +13,14 @@ public class UserController : Controller
     private readonly ILogger<UserController> _logger;
     private UserService _userService;
     private IMapper _mapper;
-    public UserController(UserService userService, IMapper mapper, ILogger<UserController> logger)
+    private SettingsValidationBase _validationBase;
+
+    public UserController(UserService userService, IMapper mapper, SettingsValidationBase validationBase, ILogger<UserController> logger)
     {
         _logger = logger;
         _userService = userService;
         _mapper = mapper;
+        _validationBase = validationBase;
     }
 
     [HttpGet]
@@ -29,6 +33,15 @@ public class UserController : Controller
     [HttpPost]
     public ActionResult Authorize(string login, string password)
     {
+        //validation
+        var res = _validationBase.IsValid(
+            (SettingsValidateType.Login, login),
+            (SettingsValidateType.Password, password)
+            );
+        if (!res.IsValid)
+            return BadRequest(res.MsgText);
+        //validation
+
         var userUnfoLogic = _userService.Authorize(login, password);
         var userUnfoView = _mapper.Map<UserFullDtoView>(userUnfoLogic);
         ViewBag.Layout = "_Master";
@@ -44,13 +57,24 @@ public class UserController : Controller
     [HttpGet]
     public ActionResult Info([FromRoute] int id)
     {
+        //validation
+        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
+        if (!res.IsValid) return BadRequest(res.MsgText);
+        //validation
+
         var infoLogic = _userService.Info(id);
+        if (infoLogic == null) return BadRequest();
         var infoView = _mapper.Map<UserFullDtoView>(infoLogic);
         return View(infoView);
     }
     [HttpPost]
     public ActionResult Add(UserDtoView userDtoApp)
     {
+        //validation
+        var res = _validationBase.IsValidObject(userDtoApp);
+        if (!res.IsValid) return BadRequest(res.MsgText);
+        //validation
+
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
         var userNewModel = _userService.CreateUser(userLogic);
         var id = userNewModel?.Id;
