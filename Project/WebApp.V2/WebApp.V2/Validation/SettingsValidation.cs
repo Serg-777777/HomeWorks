@@ -17,14 +17,9 @@ class SettingValidation : SettingsValidationBase
     {
         ResultValidation res = new ResultValidation(false, "default");
 
-        if (obj is UserDtoView)
-        {
-            res = ValidateUserDtoView(obj);
-        }
-        if (obj is UserEditDtoView)
-        {
-            res = ValidateUserEditDtoView(obj);
-        }
+        if (obj is UserDtoView) res = ValidateUserDtoView(obj);
+        if (obj is UserEditDtoView) res = ValidateUserEditDtoView(obj);
+
         return res;
     }
     private ResultValidation ValidateUserEditDtoView(UserEditDtoView obj)
@@ -39,10 +34,8 @@ class SettingValidation : SettingsValidationBase
     private ResultValidation ValidateUserDtoView(UserDtoView obj)
     {
         var res = OnValidLogin(obj.Login!);
-        if (res.IsValid)
-            res = OnValidPassword(obj.Password!);
-        if (res.IsValid)
-            res = OnValidEmail(obj.Email!);
+        if (res.IsValid) res = OnValidPassword(obj.Password!);
+        if (res.IsValid) res = OnValidEmail(obj.Email!);
         return res!;
     }
 
@@ -61,10 +54,13 @@ class SettingValidation : SettingsValidationBase
     }
     protected override ResultValidation OnValidEmail(dynamic value)
     {
-        if (StringIntersect(value, _valuesValidation.CharsNotContaints))
+        var val = (string)value;
+        if (StringIntersect(val, _valuesValidation.CharsNotContaints))
             return new ResultValidation(false, "Email содержит недопустимые символы");
-        if (StringNullAndLenght(value, _valuesValidation.EmaiMin, _valuesValidation.EmaiMax))
-            return new ResultValidation(false, "Email не корректен");
+        if (StringNullAndLenght(val, _valuesValidation.EmaiMin, _valuesValidation.EmaiMax))
+            return new ResultValidation(false, "Email не корректный");
+        if(!val.Contains('@'))
+            return new ResultValidation(false, "Email не корректный формат");
         return new ResultValidation(true, "Ok");
     }
     protected override ResultValidation OnValidId(dynamic value)
@@ -72,7 +68,7 @@ class SettingValidation : SettingsValidationBase
         var res = value is int;
         if (!res) return new ResultValidation(false, "ID не соответствует тип");
         res = StringNullAndLenght((string)value, _valuesValidation.IdMin, _valuesValidation.IdMax);
-        if (res) return new ResultValidation(false, "ID не корректен");
+        if (res) return new ResultValidation(false, "ID не корректный");
         return new ResultValidation(true, "Ok");
     }
 
@@ -90,7 +86,7 @@ class SettingValidation : SettingsValidationBase
     {
         string str = (string)value;
         if (StringNullAndLenght(str, _valuesValidation.PasswordMin, _valuesValidation.PasswordMax))
-            return new ResultValidation(false, "Password не корректенt");
+            return new ResultValidation(false, "Password не корректен");
         if (StringIntersect(str, _valuesValidation.CharsNotContaints))
             return new ResultValidation(false, "Password содержит недопустимые символы");
         return new ResultValidation(true, "Ok");
