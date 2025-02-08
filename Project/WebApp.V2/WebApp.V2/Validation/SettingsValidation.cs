@@ -4,10 +4,10 @@ namespace Presentation.Validation;
 
 class SettingValidation : SettingsValidationBase
 {
-    private SettingValuesValidation _valuesValidation;
+    private SettingsValuesValidation _valuesValidation;
     protected SettingValidation()
     {
-        _valuesValidation = SettingValuesValidation.GetInstance();
+        _valuesValidation = SettingsValuesValidation.GetInstance();
         SetValidationMethod(SettingsValidateType.Id, OnValidId);
         SetValidationMethod(SettingsValidateType.Login, OnValidLogin);
         SetValidationMethod(SettingsValidateType.Password, OnValidPassword);
@@ -17,13 +17,25 @@ class SettingValidation : SettingsValidationBase
     {
         ResultValidation res = new ResultValidation(false, "default");
 
-        if (obj is UserDtoView dto)
+        if (obj is UserDtoView)
         {
-            res = ValidateUserDtoView(dto);
+            res = ValidateUserDtoView(obj);
+        }
+        if (obj is UserEditDtoView)
+        {
+            res = ValidateUserEditDtoView(obj);
         }
         return res;
     }
+    private ResultValidation ValidateUserEditDtoView(UserEditDtoView obj)
+    {
+        var res = OnValidLogin(obj.Login!);
+        if (res.IsValid) res = OnValidEmail(obj.Email!);
+        if (res.IsValid) res = OnValidId(obj.Id);
+        if (res.IsValid) res = OnValidLogin(obj.Role?.RoleName!);
 
+        return res;
+    }
     private ResultValidation ValidateUserDtoView(UserDtoView obj)
     {
         var res = OnValidLogin(obj.Login!);
@@ -42,35 +54,44 @@ class SettingValidation : SettingsValidationBase
         return false;
     }
 
+    private bool StringNullAndLenght(string? str, int minValue, int maxValue)
+    {
+        var res = (str == null || str.Length < minValue || str.Length > maxValue);
+        return res;
+    }
     protected override ResultValidation OnValidEmail(dynamic value)
     {
         if (StringIntersect(value, _valuesValidation.CharsNotContaints))
+            return new ResultValidation(false, "Email содержит недопустимые символы");
+        if (StringNullAndLenght(value, _valuesValidation.EmaiMin, _valuesValidation.EmaiMax))
             return new ResultValidation(false, "Email не корректен");
         return new ResultValidation(true, "Ok");
     }
     protected override ResultValidation OnValidId(dynamic value)
     {
         var res = value is int;
-        if (!res) return new ResultValidation(false, "ID не корректен");
+        if (!res) return new ResultValidation(false, "ID не соответствует тип");
+        res = StringNullAndLenght((string)value, _valuesValidation.IdMin, _valuesValidation.IdMax);
+        if (res) return new ResultValidation(false, "ID не корректен");
         return new ResultValidation(true, "Ok");
     }
 
     protected override ResultValidation OnValidLogin(dynamic value)
     {
-        string v = (string)value;
-        if (v == null || v.Length <= _valuesValidation.NameMin || v.Length >= _valuesValidation.NameMax)
+        string str = (string)value;
+        if (StringNullAndLenght(str, _valuesValidation.NameMin, _valuesValidation.NameMax))
             return new ResultValidation(false, "Login не корректен");
-        if (StringIntersect(v, _valuesValidation.CharsNotContaints))
+        if (StringIntersect(str, _valuesValidation.CharsNotContaints))
             return new ResultValidation(false, "Login содержит недопустимые символы");
         return new ResultValidation(true, "Ok"); ;
     }
 
     protected override ResultValidation OnValidPassword(dynamic value)
     {
-        string v = (string)value;
-        if (v == null || v.Length <= _valuesValidation.PasswordMin || v.Length >= _valuesValidation.PasswordMax)
+        string str = (string)value;
+        if (StringNullAndLenght(str, _valuesValidation.PasswordMin, _valuesValidation.PasswordMax))
             return new ResultValidation(false, "Password не корректенt");
-        if (StringIntersect(v, _valuesValidation.CharsNotContaints))
+        if (StringIntersect(str, _valuesValidation.CharsNotContaints))
             return new ResultValidation(false, "Password содержит недопустимые символы");
         return new ResultValidation(true, "Ok");
     }

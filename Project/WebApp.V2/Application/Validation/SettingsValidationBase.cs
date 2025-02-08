@@ -2,7 +2,7 @@
 
 namespace Application.Validation;
 
-public abstract class SettingsValidationBase
+public abstract class SettingsValidationBase: IValidationActions
 {
     private Dictionary<SettingsValidateType, Func<dynamic, ResultValidation>> _settingsLiist;
     public SettingsValidationBase()
@@ -25,7 +25,7 @@ public abstract class SettingsValidationBase
     
     public virtual ResultValidation IsValid(params (SettingsValidateType setting, dynamic value)[] values)
     {
-        ResultValidation res = default!;
+        ResultValidation res = new ResultValidation(false, "default") ;
         foreach(var v in values)
         {
             var act = GetValidationMethod(v.setting);
@@ -35,11 +35,11 @@ public abstract class SettingsValidationBase
         }
         return res;
     }
-    public abstract ResultValidation IsValidObject(dynamic obj);
     protected abstract ResultValidation OnValidId(dynamic value);
     protected abstract ResultValidation OnValidLogin(dynamic value);
     protected abstract ResultValidation OnValidPassword(dynamic value);
     protected abstract ResultValidation OnValidEmail(dynamic value);
+    public abstract ResultValidation IsValidObject(dynamic obj);
 }
 
 

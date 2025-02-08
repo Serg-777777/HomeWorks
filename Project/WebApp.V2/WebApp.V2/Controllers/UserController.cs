@@ -13,9 +13,9 @@ public class UserController : Controller
     private readonly ILogger<UserController> _logger;
     private UserService _userService;
     private IMapper _mapper;
-    private SettingsValidationBase _validationBase;
+    private IValidationActions _validationBase;
 
-    public UserController(UserService userService, IMapper mapper, SettingsValidationBase validationBase, ILogger<UserController> logger)
+    public UserController(UserService userService, IMapper mapper, IValidationActions validationBase, ILogger<UserController> logger)
     {
         _logger = logger;
         _userService = userService;
@@ -84,6 +84,11 @@ public class UserController : Controller
     [HttpGet]
     public ActionResult Edit([FromRoute] int id)
     {
+        //validation
+        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
+        if (!res.IsValid) return BadRequest(res.MsgText);
+        //validation
+
         var userLogic = _userService.GetUser(id);
         if (userLogic != null)
         {
@@ -98,6 +103,11 @@ public class UserController : Controller
     [HttpPost]
     public ActionResult Editing([FromForm] UserEditDtoView userDtoView)
     {
+        //validation
+        var res = _validationBase.IsValidObject(userDtoView);
+        if (!res.IsValid) return BadRequest(res.MsgText);
+        //validation
+
         var user = _userService.GetUser(userDtoView.Id);
         if (user != null)
         {
@@ -110,7 +120,24 @@ public class UserController : Controller
     [HttpGet]
     public ActionResult Delete([FromRoute] int id)
     {
-        var res = _userService.DeleteUser(id);
+        //validation
+        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
+        if (!res.IsValid) return BadRequest(res.MsgText);
+        //validation
+
+        var result = _userService.DeleteUser(id);
+        return LocalRedirect("~/user/all");
+    }
+
+    [HttpGet]
+    public ActionResult Erase([FromRoute] int id)
+    {
+        //validation
+        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
+        if (!res.IsValid) return BadRequest(res.MsgText);
+        //validation
+
+        var result = _userService.EraseUser(id);
         return LocalRedirect("~/user/all");
     }
     [HttpGet]
@@ -134,14 +161,9 @@ public class UserController : Controller
         }
 
         // var us = _mapper.Map<List<UserFullDtoLogic>>(userFullDtos);
-        // var res = _userService.UpdateUsers(us);
+        // var result = _userService.UpdateUsers(us);
 
         return LocalRedirect("~/user/all");
     }
-    [HttpGet]
-    public ActionResult Erase([FromRoute] int id)
-    {
-        var res = _userService.EraseUser(id);
-        return LocalRedirect("~/user/all");
-    }
+
 }
