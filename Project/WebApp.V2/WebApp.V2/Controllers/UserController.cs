@@ -4,23 +4,23 @@ using AutoMapper;
 using Infrastructure.DtoLogics.UserDtoLogics;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.DtoViews.UserDtoViews;
-using Application.Validation;
+using Presentation.Validation;
 
 namespace Presentation.Controllers;
 
-public class UserController : Controller
+public sealed class UserController : Controller
 {
     private readonly ILogger<UserController> _logger;
     private UserService _userService;
     private IMapper _mapper;
-    private IValidationActions _validationBase;
+    private IValidationUser _validationUser;
 
-    public UserController(UserService userService, IMapper mapper, IValidationActions validationBase, ILogger<UserController> logger)
+    public UserController(UserService userService, IMapper mapper, IValidationUser validationUser, ILogger<UserController> logger)
     {
         _logger = logger;
         _userService = userService;
         _mapper = mapper;
-        _validationBase = validationBase;
+        _validationUser = validationUser;
     }
 
     [HttpGet]
@@ -34,12 +34,8 @@ public class UserController : Controller
     public ActionResult Authorize(string login, string password)
     {
         //validation
-        var res = _validationBase.IsValid(
-            (SettingsValidateType.Login, login),
-            (SettingsValidateType.Password, password)
-            );
-        if (!res.IsValid)
-            return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateAutirize(login, password);
+        if(!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var userUnfoLogic = _userService.Authorize(login, password);
@@ -58,8 +54,8 @@ public class UserController : Controller
     public ActionResult Info([FromRoute] int id)
     {
         //validation
-        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
-        if (!res.IsValid) return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateId(id);
+        if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var infoLogic = _userService.Info(id);
@@ -71,8 +67,8 @@ public class UserController : Controller
     public ActionResult Add(UserDtoView userDtoApp)
     {
         //validation
-        var res = _validationBase.IsValidObject(userDtoApp);
-        if (!res.IsValid) return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateUserDtoView(userDtoApp);
+        if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
@@ -85,8 +81,8 @@ public class UserController : Controller
     public ActionResult Edit([FromRoute] int id)
     {
         //validation
-        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
-        if (!res.IsValid) return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateId(id);
+        if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var userLogic = _userService.GetUser(id);
@@ -104,8 +100,8 @@ public class UserController : Controller
     public ActionResult Editing([FromForm] UserEditDtoView userDtoView)
     {
         //validation
-        var res = _validationBase.IsValidObject(userDtoView);
-        if (!res.IsValid) return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateUserEditDtoView(userDtoView);
+        if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var user = _userService.GetUser(userDtoView.Id);
@@ -121,8 +117,8 @@ public class UserController : Controller
     public ActionResult Delete([FromRoute] int id)
     {
         //validation
-        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
-        if (!res.IsValid) return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateId(id);
+        if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var result = _userService.DeleteUser(id);
@@ -133,13 +129,15 @@ public class UserController : Controller
     public ActionResult Erase([FromRoute] int id)
     {
         //validation
-        var res = _validationBase.IsValid((SettingsValidateType.Id, id));
-        if (!res.IsValid) return BadRequest(res.MsgText);
+        var valid = _validationUser.ValidateId(id);
+        if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var result = _userService.EraseUser(id);
         return LocalRedirect("~/user/all");
     }
+
+    //FOR TESTING//
     [HttpGet]
     public ActionResult All()
     {
@@ -160,10 +158,7 @@ public class UserController : Controller
             _logger.LogInformation($"::: Request.Form Key: {f.Key} Value:{f.Value}");
         }
 
-        // var us = _mapper.Map<List<UserFullDtoLogic>>(userFullDtos);
-        // var result = _userService.UpdateUsers(us);
-
         return LocalRedirect("~/user/all");
     }
-
+    //FOR TESTING//
 }

@@ -3,6 +3,7 @@ using Application.ServicesViews.UserServicesApps;
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
 using Infrastructure.Repositories.UserRepos;
+using Presentation.Validation;
 
 namespace Presentation.Configs
 {
@@ -15,7 +16,9 @@ namespace Presentation.Configs
             .AddScoped<IUserProfileRepository, UserProfileRepository>()
             .AddScoped<UserService>()
             .AddDbContext<UserContext>()
-            .AddScoped<UserProfileService>();
+            .AddScoped<UserProfileService>()
+            .AddScoped<IValidationUser, ValidationUser>();
+
             return services;
         }
     }
