@@ -6,7 +6,7 @@ namespace Infrastructure.Repositories.UserRepos;
 
 public interface IUserRepository : IRepository<UserModel, int>
 {
-    public bool UpdateEntityRange(List<UserModel> userModels);
-    public bool EraseEntity(int idUser);
-    public UserModel? Authorize(string login, string password);
+    public Task<bool> EraseEntityAsync(int idUser);
+    public Task<UserModel>? AuthorizeAsync(string login, string password);
+    public Task<UserModel>? GetEntityByLoginAsync(string login);
 }

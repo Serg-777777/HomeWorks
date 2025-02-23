@@ -2,6 +2,7 @@
 
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.UserRepos
 {
@@ -12,43 +13,49 @@ namespace Infrastructure.Repositories.UserRepos
         {
             _context = context;
         }
-        public List<UserProfileModel> Entities => _context.Profiles.ToList();
+        public async Task<List<UserProfileModel>> EntitiesAsync ()
+        { 
+           var list = await _context.Profiles.ToListAsync();
+            return list;
+        }
 
-        public UserProfileModel? AddEntity(UserProfileModel entity)
+        public async Task<UserProfileModel>? AddEntityAsync(UserProfileModel entity)
         {
-           var prof = _context.Profiles.Add(entity).Entity;
+           var profEntity = await _context.Profiles.AddAsync(entity);
+           await _context.SaveChangesAsync();
+            var prof = profEntity.Entity;
             return prof;
         }
         
-        public UserProfileModel? GetEntity(int idUser)
+        public async Task<UserProfileModel>? GetEntityAsync(int idUser)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.UserId == idUser);
-            return prof;
+            var prof = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == idUser);
+            return prof!;
         }
 
-        public bool RemoveEntity(int idUser)
+        public async Task<bool> RemoveEntityAsync(int idUser)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.User!.Id == idUser);
-            if(prof!=null)
+            var prof = await GetEntityAsync(idUser)!;
+            if(prof!=default)
             {
                 var res = _context.Profiles.Remove(prof);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
-        public UserProfileModel? UpdateEntity(int idUser, UserProfileModel entity)
+        public async  Task<UserProfileModel>? UpdateEntityAsync(int idUser, UserProfileModel entity)
         {
-            var prof = _context.Profiles.FirstOrDefault(p => p.User!.Id == idUser);
-            if (prof != null)
+            var prof = await GetEntityAsync(idUser)!;
+            if (prof != default)
             {
                 prof.SetValues(entity);
                 var res = _context.Profiles.Update(prof);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return res.Entity;
             }
-            return null;
+            return null!;
         }
     }
 }

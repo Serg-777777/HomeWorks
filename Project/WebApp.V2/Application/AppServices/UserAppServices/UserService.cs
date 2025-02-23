@@ -17,31 +17,35 @@ public class UserService
         _userRepository = userRepository;
         _mapper = mapper;
     }
-    
-    public UserFullDtoLogic? Authorize(string login, string password)
+
+    public async Task<UserFullDtoLogic>? AuthorizeAsync(string login, string password)
     {
-        var user = _userRepository.Authorize(login, password);
-        if(user != null)
+        var user = await _userRepository.AuthorizeAsync(login, password)!;
+        if (user != default!)
         {
             var uLogic = _mapper.Map<UserFullDtoLogic>(user);
             return uLogic;
         }
-        return null;
+        return null!;
     }
-    public UserFullDtoLogic? Info(int id)
+    public async Task<UserFullDtoLogic>? Info(int id)
     {
-        var user = _userRepository.GetEntity(id);
-        var uLogic = _mapper.Map<UserFullDtoLogic>(user);
-        return uLogic;
+        var user = await _userRepository.GetEntityAsync(id)!;
+        if (user != default!)
+        {
+            var uLogic = _mapper.Map<UserFullDtoLogic>(user);
+            return uLogic;
+        }
+        return null!;
     }
-    public List<UserFullDtoLogic> GetUsers()
+    public async Task<List<UserFullDtoLogic>> GetUsersAsync()
     {
-        var users = _userRepository.Entities;
+        var users = await _userRepository.EntitiesAsync();
         var usersLogics = _mapper.Map<List<UserFullDtoLogic>>(users);
         return usersLogics;
     }
-    
-    public UserFullDtoLogic? CreateUser(UserDtoLogic userDtoLogic)
+
+    public async Task<UserFullDtoLogic>? CreateUserAsync(UserDtoLogic userDtoLogic)
     {
         var userModel = _mapper.Map<UserModel>(userDtoLogic);
         var role = new UserRoleModel() { RoleName = "гость" };
@@ -51,49 +55,42 @@ public class UserService
             .SetRole(role)
             .SetProfile(prof);
         prof.SetUserProperty(userModel);
-        var newUser = _userRepository.AddEntity(userModel);
-        if (newUser != null)
+        var newUser = await _userRepository.AddEntityAsync(userModel)!;
+        if (newUser != default!)
         {
             var newUserLogic = _mapper.Map<UserFullDtoLogic>(newUser);
             return newUserLogic!;
         }
-        return null;
+        return null!;
     }
 
-    public UserFullDtoLogic? GetUser(int userId)
+    public async Task<UserFullDtoLogic>? GetUserAsync(int userId)
     {
-        var user = _userRepository.GetEntity(userId);
-        if (user != null)
+        var user = await _userRepository.GetEntityAsync(userId)!;
+        if (user != default!)
         {
             var userIdLogic = _mapper.Map<UserFullDtoLogic>(user);
             return userIdLogic;
         }
-        return null;
+        return null!;
     }
 
-    public UserFullDtoLogic? UpdateUser(UserFullDtoLogic newUser)
+    public async Task<UserFullDtoLogic>? UpdateUserAsync(UserFullDtoLogic newUser)
     {
-            var userModel = _mapper.Map<UserModel>(newUser);
-            var u = _userRepository.UpdateEntity(newUser.Id, userModel);
-            var userLogic = _mapper.Map<UserFullDtoLogic> (u);
-            return userLogic;
+        var userModel = _mapper.Map<UserModel>(newUser);
+        var u = await _userRepository.UpdateEntityAsync(newUser.Id, userModel)!;
+        var userLogic = _mapper.Map<UserFullDtoLogic>(u);
+        return userLogic;
     }
-    public bool DeleteUser(int id)
+    public async Task<bool> DeleteUserAsync(int id)
     {
-        var res = _userRepository.RemoveEntity(id);
-        return res;
-    }
-    
-    public bool UpdateUsers(List<UserFullDtoLogic> userFullDtos)
-    {
-        var us = _mapper.Map<List<UserModel>>(userFullDtos);
-        var res = _userRepository.UpdateEntityRange(us);
+        var res = await _userRepository.RemoveEntityAsync(id);
         return res;
     }
 
-    public bool EraseUser(int idUser)
+    public async Task<bool> EraseUser(int idUser)
     {
-        var res = _userRepository.EraseEntity(idUser);
+        var res = await _userRepository.EraseEntityAsync(idUser);
         return res;
     }
 }

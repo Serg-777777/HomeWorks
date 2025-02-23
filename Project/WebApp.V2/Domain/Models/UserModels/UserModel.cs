@@ -30,7 +30,6 @@ public class UserModel : IEntity
     }
     public UserModel SetEditValues(UserModel entity)
     {
-        // Login = entity.Login; проверка на уникальность
         if (!String.IsNullOrEmpty(Email)) Email = entity.Email;
         if (!String.IsNullOrEmpty(Password)) Password = entity.Password;
         if (entity.Role != null) Role = entity.Role;
@@ -52,9 +51,36 @@ public class UserModel : IEntity
         this.IsDeleted = val;
         return this;
     }
-    public bool Equals(UserModel? other)
+
+    public override bool Equals(object? obj)
     {
-        return (this.Id == other?.Id);
+        if(obj is UserModel model && obj != default)
+        {
+            return this.Id == model.Id;
+        }
+        return false;
+    }
+   
+    public override int GetHashCode()
+    {
+        return this.Id.GetHashCode();
     }
 
+    public int Compare(object? x, object? y)
+    {
+        if((x is UserModel x1) && (y is UserModel y1))
+        {
+            return x1.Id - y1.Id;
+        }
+        return -1000;
+    }
+
+    public static bool operator ==( UserModel model1, UserModel model2)
+    {
+        return model1.Id == model2.Id;
+    }
+    public static bool operator !=(UserModel model1, UserModel model2)
+    {
+        return model1.Id!=model2.Id;
+    }
 }

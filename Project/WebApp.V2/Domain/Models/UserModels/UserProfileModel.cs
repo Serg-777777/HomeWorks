@@ -38,9 +38,23 @@ namespace Domain.Models.UserModels;
         User = user;
         return this;
     }
-    public bool Equals(UserProfileModel? other)
+    public override bool Equals(object? other)
     {
-        return this.Id == other?.Id;
+        if ((other is UserProfileModel obj) && (obj != null))
+            return this.UserId == obj.UserId;
+        return false;
+    }
+
+    public int Compare(object? x, object? y)
+    {
+        if ((x is UserProfileModel x1 && y is UserProfileModel y1) && (x1 != null! && y1 != null!))
+            return x1.UserId - y1.UserId;
+        return -1000;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Id.GetHashCode();
     }
 }
 

@@ -1,8 +1,7 @@
 ﻿
 
-namespace Domain.Models
-{
-    public interface IEntity : IEquatable<object>
-    {  }
-    
-}
+namespace Domain.Models;
+
+public interface IEntity:IComparer<object>
+{  }
+

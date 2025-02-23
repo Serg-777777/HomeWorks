@@ -21,5 +21,13 @@
         public const int RoleMaximumLength = 15;
         public const string RoleMSG = "Role not correct";
 
+        public const int FirstNameMaxLength = 150;
+        public const int LastNameMaxLength = 250;
+        public const int CountryMaxLength = 150;
+        public const int CityMaxLength = 152;
+        public const int MinLength = 3;
+        public const int AgeMin = 18;
+        public const int AgeMax = 150;
+
     }
 }

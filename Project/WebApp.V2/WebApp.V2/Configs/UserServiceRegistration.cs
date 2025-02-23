@@ -17,7 +17,8 @@ namespace Presentation.Configs
             .AddScoped<UserService>()
             .AddDbContext<UserContext>()
             .AddScoped<UserProfileService>()
-            .AddScoped<IValidationUser, ValidationUser>();
+            .AddScoped<IValidationUser, ValidationUser>()
+            .AddScoped<IValidationUserProfile, ValidationUserProfile>();
 
             return services;
         }

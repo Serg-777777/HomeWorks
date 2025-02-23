@@ -16,35 +16,35 @@ namespace Application.AppServices.UserAppServices
             _profileRepository = profileRepository;
         }
 
-        public UserProfileDtoLogic? GetProfile(int idUser)
+        public async Task<UserProfileDtoLogic>? GetProfileAsync(int idUser)
         {
-            var prof = _profileRepository.GetEntity(idUser);
-            if (prof != null)
+            var prof = await _profileRepository.GetEntityAsync(idUser)!;
+            if (prof != default)
             {
                 var profLogic = _mapper.Map<UserProfileDtoLogic>(prof);
                 return profLogic;
             }
-            return null;
+            return null!;
         }
 
-        public UserProfileDtoLogic? CreateProfile(UserProfileDtoLogic userProfileDto)
+        public async Task<UserProfileDtoLogic>? CreateProfileAsync(UserProfileDtoLogic userProfileDto)
         {
             var prof = _mapper.Map<UserProfileModel>(userProfileDto);
-            var profNew = _profileRepository.AddEntity(prof);
+            var profNew = await _profileRepository.AddEntityAsync(prof)!;
             var profNewView = _mapper.Map<UserProfileDtoLogic>(profNew);
             return profNewView;
         }
 
-        public bool DeleteProfile(int idUser)
+        public async Task<bool> DeleteProfileAsync(int idUser)
         {
-            var res = _profileRepository.RemoveEntity(idUser);
+            var res = await _profileRepository.RemoveEntityAsync(idUser);
             return res;
         }
 
-        public UserProfileDtoLogic? UpdateProfile(int idUser, UserProfileDtoLogic userProfileDto)
+        public async Task<UserProfileDtoLogic>? UpdateProfileAsync(int idUser, UserProfileDtoLogic userProfileDto)
         {
             var prof = _mapper.Map<UserProfileModel>(userProfileDto);
-            var profNew = _profileRepository.UpdateEntity(idUser, prof);
+            var profNew = await _profileRepository.UpdateEntityAsync(idUser, prof)!;
             var profNewView = _mapper.Map<UserProfileDtoLogic>(profNew);
             return profNewView;
         }

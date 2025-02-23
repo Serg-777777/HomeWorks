@@ -34,11 +34,11 @@ public sealed class UserController : Controller
     public ActionResult Authorize(string login, string password)
     {
         //validation
-        var valid = _validationUser.ValidateAutirize(login, password);
+        var valid = _validationUser.Validate(login, password);
         if(!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var userUnfoLogic = _userService.Authorize(login, password);
+        var userUnfoLogic = _userService.AuthorizeAsync(login, password);
         var userUnfoView = _mapper.Map<UserFullDtoView>(userUnfoLogic);
         ViewBag.Layout = "_Master";
         return View("Info", userUnfoView);
@@ -54,7 +54,7 @@ public sealed class UserController : Controller
     public ActionResult Info([FromRoute] int id)
     {
         //validation
-        var valid = _validationUser.ValidateId(id);
+        var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
@@ -67,12 +67,12 @@ public sealed class UserController : Controller
     public ActionResult Add(UserDtoView userDtoApp)
     {
         //validation
-        var valid = _validationUser.ValidateUserDtoView(userDtoApp);
+        var valid = _validationUser.Validate(userDtoApp);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-        var userNewModel = _userService.CreateUser(userLogic);
+        var userNewModel = _userService.CreateUserAsync(userLogic);
         var id = userNewModel?.Id;
         return LocalRedirect($"~/user/all");
     }
@@ -81,11 +81,11 @@ public sealed class UserController : Controller
     public ActionResult Edit([FromRoute] int id)
     {
         //validation
-        var valid = _validationUser.ValidateId(id);
+        var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var userLogic = _userService.GetUser(id);
+        var userLogic = _userService.GetUserAsync(id);
         if (userLogic != null)
         {
             var userView = _mapper.Map<UserEditDtoView>(userLogic);
@@ -100,15 +100,15 @@ public sealed class UserController : Controller
     public ActionResult Editing([FromForm] UserEditDtoView userDtoView)
     {
         //validation
-        var valid = _validationUser.ValidateUserEditDtoView(userDtoView);
+        var valid = _validationUser.Validate(userDtoView);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var user = _userService.GetUser(userDtoView.Id);
+        var user = _userService.GetUserAsync(userDtoView.Id);
         if (user != null)
         {
             var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoView);
-            _userService.UpdateUser(userLogic);
+            _userService?.UpdateUserAsync(userLogic);
             return LocalRedirect($"~/user/info/{userDtoView.Id}");
         }
         return BadRequest($"Пользователь не найден");
@@ -117,11 +117,11 @@ public sealed class UserController : Controller
     public ActionResult Delete([FromRoute] int id)
     {
         //validation
-        var valid = _validationUser.ValidateId(id);
+        var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var result = _userService.DeleteUser(id);
+        var result = _userService.DeleteUserAsync(id);
         return LocalRedirect("~/user/all");
     }
 
@@ -129,7 +129,7 @@ public sealed class UserController : Controller
     public ActionResult Erase([FromRoute] int id)
     {
         //validation
-        var valid = _validationUser.ValidateId(id);
+        var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
@@ -137,28 +137,14 @@ public sealed class UserController : Controller
         return LocalRedirect("~/user/all");
     }
 
-    //FOR TESTING//
     [HttpGet]
     public ActionResult All()
     {
-        var usLogic = _userService.GetUsers();
+        var usLogic = _userService.GetUsersAsync();
         var usView = _mapper.Map<List<UserFullDtoView>>(usLogic);
         ViewBag.Layout = "_Master";
         return View(usView);
     }
 
-    [HttpPost]
-    public ActionResult AllUpdate(IFormCollection forms)
-    {
-        _logger.LogInformation($"::: TEST NAME DateCreated-: {forms["DateCreated-1"]}");
-        _logger.LogInformation($"::: TEST Request.Form Count: {forms.Count()}");
 
-        foreach (var f in forms)
-        {
-            _logger.LogInformation($"::: Request.Form Key: {f.Key} Value:{f.Value}");
-        }
-
-        return LocalRedirect("~/user/all");
-    }
-    //FOR TESTING//
 }

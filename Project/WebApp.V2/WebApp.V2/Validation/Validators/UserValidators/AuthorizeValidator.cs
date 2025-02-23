@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using Presentation.Validation.Records;
 
 namespace Presentation.Validation.Validators;

@@ -2,71 +2,77 @@
 using Domain.Models.UserModels;
 using Infrastructure.Contexts.UserContexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories.UserRepos;
 
 sealed public class UserRepository : IUserRepository
 {
     UserContext _userContext = default!;
+
     public UserRepository(UserContext userContext)
     {
         _userContext = userContext;
     }
 
-    public List<UserModel> Entities => _userContext.Users.AsNoTracking().ToList();
-    public UserModel? Authorize(string login, string password)
+    public async Task<List<UserModel>> EntitiesAsync()
     {
-        var user = _userContext.Users.Include(p => p.Profile).FirstOrDefault(u => u.Login == login && u.Password == password);
-        return user;
+        var list = await _userContext.Users.AsNoTracking().ToListAsync();
+        return list;
     }
-    public UserModel? AddEntity(UserModel entity)
+    public async Task<UserModel> AuthorizeAsync(string login, string password)
     {
-        var newUser = _userContext.Users.Add(entity).Entity;
+        var user = await _userContext.Users.Include(p => p.Profile).FirstOrDefaultAsync(u => u.Login == login && u.Password == password);
+        return user!;
+    }
+    public async Task<UserModel>? AddEntityAsync(UserModel entity)
+    {
+        var obj = await GetEntityByLoginAsync(entity.Login!)!;
+        if (obj != default!) return null!;
+
+        var newUserEntity = await _userContext.Users.AddAsync(entity);
+        var newUser = newUserEntity.Entity;
         _userContext.Profiles.Add(entity.Profile!);
-        _userContext.SaveChanges();
+        await _userContext.SaveChangesAsync();
         return newUser;
     }
-    public UserModel? GetEntity(int idUser)
+    public async Task<UserModel>? GetEntityAsync(int idUser)
     {
-        var user = _userContext.Users.Include(u => u.Profile).FirstOrDefault(u => u.Id == idUser);
-        return user;
+        var user = await _userContext.Users.Include(u => u.Profile).FirstOrDefaultAsync(u => u.Id == idUser);
+        return user!;
     }
-    public UserModel? UpdateEntity(int userId, UserModel entity)
+    public async Task<UserModel>? UpdateEntityAsync(int userId, UserModel entity)
     {
-        var user = GetEntity(userId);
-        if (user != null)
+        var user = await GetEntityAsync(userId)!;
+        if (user != default!)
         {
             user = _userContext.Update(user.SetEditValues(entity)).Entity;
-            _userContext.SaveChanges();
+            await _userContext.SaveChangesAsync();
             return user;
         }
         return null!;
     }
-    public bool RemoveEntity(int userId)
+    public async Task<bool> RemoveEntityAsync(int userId)
     {
-        var user = GetEntity(userId);
-        if (user != null)
+        var user = await GetEntityAsync(userId)!;
+        if (user != default!)
         {
             user.SetIsDelete(!user.IsDeleted);
             _userContext.Users.Update(user);
-            _userContext.SaveChanges();
+            await _userContext.SaveChangesAsync();
             return true;
         }
         return false;
     }
-    public bool UpdateEntityRange(List<UserModel> userModels)
+    public async Task<bool> EraseEntityAsync(int idUser)
     {
-        _userContext.Users.UpdateRange(userModels);
-        _userContext.SaveChanges();
+        var u = await GetEntityAsync(idUser)!;
+        _userContext.Users.Remove(u!);
+        await _userContext.SaveChangesAsync();
         return true;
     }
-
-    public bool EraseEntity(int idUser)
+    public async Task<UserModel>? GetEntityByLoginAsync(string login)
     {
-        var u = GetEntity(idUser);
-        _userContext.Users.Remove(u!);
-        _userContext.SaveChanges();
-        return true;
+        var model = await _userContext.Users.FirstOrDefaultAsync(u => u.Login == login);
+        return model!;
     }
 }
