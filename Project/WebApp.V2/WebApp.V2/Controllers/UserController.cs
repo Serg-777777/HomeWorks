@@ -31,14 +31,14 @@ public sealed class UserController : Controller
     }
 
     [HttpPost]
-    public ActionResult Authorize(string login, string password)
+    public async Task<ActionResult> Authorize(string login, string password)
     {
         //validation
         var valid = _validationUser.Validate(login, password);
         if(!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var userUnfoLogic = _userService.AuthorizeAsync(login, password);
+        var userUnfoLogic = await _userService.AuthorizeAsync(login, password)!;
         var userUnfoView = _mapper.Map<UserFullDtoView>(userUnfoLogic);
         ViewBag.Layout = "_Master";
         return View("Info", userUnfoView);
@@ -51,20 +51,20 @@ public sealed class UserController : Controller
         return View(userDtoApp);
     }
     [HttpGet]
-    public ActionResult Info([FromRoute] int id)
+    public async Task<ActionResult> Info([FromRoute] int id)
     {
         //validation
         var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var infoLogic = _userService.Info(id);
+        var infoLogic = await _userService.InfoAsync(id)!;
         if (infoLogic == null) return BadRequest();
         var infoView = _mapper.Map<UserFullDtoView>(infoLogic);
         return View(infoView);
     }
     [HttpPost]
-    public ActionResult Add(UserDtoView userDtoApp)
+    public async Task<ActionResult> Add(UserDtoView userDtoApp)
     {
         //validation
         var valid = _validationUser.Validate(userDtoApp);
@@ -72,20 +72,20 @@ public sealed class UserController : Controller
         //validation
 
         var userLogic = _mapper.Map<UserDtoLogic>(userDtoApp);
-        var userNewModel = _userService.CreateUserAsync(userLogic);
+        var userNewModel = await _userService.CreateUserAsync(userLogic)!;
         var id = userNewModel?.Id;
         return LocalRedirect($"~/user/all");
     }
 
     [HttpGet]
-    public ActionResult Edit([FromRoute] int id)
+    public async Task<ActionResult> Edit([FromRoute] int id)
     {
         //validation
         var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var userLogic = _userService.GetUserAsync(id);
+        var userLogic = await _userService.GetUserAsync(id)!;
         if (userLogic != null)
         {
             var userView = _mapper.Map<UserEditDtoView>(userLogic);
@@ -97,7 +97,7 @@ public sealed class UserController : Controller
     }
 
     [HttpPost]
-    public ActionResult Editing([FromForm] UserEditDtoView userDtoView)
+    public async Task<ActionResult> Editing([FromForm] UserEditDtoView userDtoView)
     {
         //validation
         var valid = _validationUser.Validate(userDtoView);
@@ -108,32 +108,32 @@ public sealed class UserController : Controller
         if (user != null)
         {
             var userLogic = _mapper.Map<UserFullDtoLogic>(userDtoView);
-            _userService?.UpdateUserAsync(userLogic);
+           await _userService?.UpdateUserAsync(userLogic)!;
             return LocalRedirect($"~/user/info/{userDtoView.Id}");
         }
         return BadRequest($"Пользователь не найден");
     }
     [HttpGet]
-    public ActionResult Delete([FromRoute] int id)
+    public async Task<ActionResult> Delete([FromRoute] int id)
     {
         //validation
         var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var result = _userService.DeleteUserAsync(id);
+        var result = await _userService.DeleteUserAsync(id);
         return LocalRedirect("~/user/all");
     }
 
     [HttpGet]
-    public ActionResult Erase([FromRoute] int id)
+    public async Task<ActionResult> Erase([FromRoute] int id)
     {
         //validation
         var valid = _validationUser.Validate(id);
         if (!valid.IsValid) return BadRequest(valid.Errors[0].ErrorMessage);
         //validation
 
-        var result = _userService.EraseUser(id);
+        var result =await _userService.EraseUserAsync(id);
         return LocalRedirect("~/user/all");
     }
 

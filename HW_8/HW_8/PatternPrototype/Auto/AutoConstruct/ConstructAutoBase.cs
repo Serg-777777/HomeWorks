@@ -27,7 +27,6 @@ internal abstract class ConstructAutoBase : IConstructAuto<ConstructAutoBase>
         _autoParts.SetBody(_body);
         return this;
     }
-
     public ConstructAutoBase CreateEngie((double volume, double horses, int speed) engie)
     {
         IEngie _engie = Activator.CreateInstance<IEngie>();
@@ -37,7 +36,6 @@ internal abstract class ConstructAutoBase : IConstructAuto<ConstructAutoBase>
         _autoParts.SetEngie(_engie);
         return this;
     }
-
     public ConstructAutoBase CreateInfo((string model, string dateStart, string dateEnd) info)
     {
         IInfo _info = Activator.CreateInstance<IInfo>();

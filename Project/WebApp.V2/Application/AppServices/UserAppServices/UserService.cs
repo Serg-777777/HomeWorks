@@ -28,7 +28,7 @@ public class UserService
         }
         return null!;
     }
-    public async Task<UserFullDtoLogic>? Info(int id)
+    public async Task<UserFullDtoLogic>? InfoAsync(int id)
     {
         var user = await _userRepository.GetEntityAsync(id)!;
         if (user != default!)
@@ -88,7 +88,7 @@ public class UserService
         return res;
     }
 
-    public async Task<bool> EraseUser(int idUser)
+    public async Task<bool> EraseUserAsync(int idUser)
     {
         var res = await _userRepository.EraseEntityAsync(idUser);
         return res;
