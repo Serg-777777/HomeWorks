@@ -138,9 +138,9 @@ public sealed class UserController : Controller
     }
 
     [HttpGet]
-    public ActionResult All()
+    public async  Task<ActionResult> All()
     {
-        var usLogic = _userService.GetUsersAsync();
+        var usLogic = await _userService.GetUsersAsync();
         var usView = _mapper.Map<List<UserFullDtoView>>(usLogic);
         ViewBag.Layout = "_Master";
         return View(usView);

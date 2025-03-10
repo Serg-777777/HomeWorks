@@ -54,13 +54,13 @@ public class UserModel : IEntity
 
     public override bool Equals(object? obj)
     {
-        if(obj is UserModel model && obj != default)
+        if (obj is UserModel model && obj != default)
         {
             return this.Id == model.Id;
         }
         return false;
     }
-   
+
     public override int GetHashCode()
     {
         return this.Id.GetHashCode();
@@ -68,19 +68,24 @@ public class UserModel : IEntity
 
     public int Compare(object? x, object? y)
     {
-        if((x is UserModel x1) && (y is UserModel y1))
+        if ((x is UserModel x1) && (y is UserModel y1))
         {
             return x1.Id - y1.Id;
         }
         return -1000;
     }
-
-    public static bool operator ==( UserModel model1, UserModel model2)
+    /*
+    public static bool operator ==(UserModel? model1, UserModel? model2)
     {
-        return model1.Id == model2.Id;
+        if (model1 != null && model2 != null) 
+            return model1.Id == model2.Id;
+        return false;
     }
-    public static bool operator !=(UserModel model1, UserModel model2)
+    public static bool operator !=(UserModel? model1, UserModel? model2)
     {
-        return model1.Id!=model2.Id;
+        if (model1 != null && model2 != null)
+            return model1.Id != model2.Id;
+        return false;
     }
+    */
 }
